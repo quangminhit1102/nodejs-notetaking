@@ -7,6 +7,10 @@
     <title>Login To Note App</title>
     <meta name="robots" content="noindex, nofollow" />
     <script src="https://cdn.tailwindcss.com/3.1.4"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/simple-notify@0.5.5/dist/simple-notify.min.css"
+    />
   </head>
 
   <body>
@@ -74,25 +78,39 @@
                   Or sign up with e-mail
                 </div>
               </div> -->
-
-              <div class="mx-auto max-w-xs mt-12">
+              <!-- <% if (errorMessage) { %>
+              <div class="user-message user-message--error">
+                <%= errorMessage %>
+              </div>
+              <% } %> -->
+              <form
+                class="mx-auto max-w-xs mt-12"
+                method="post"
+                action="/signup"
+              >
                 <input
                   class="w-full px-8 py-4 rounded-lg font-medium bg-gray-100 border border-gray-200 placeholder-gray-500 text-sm focus:outline-none focus:border-gray-400 focus:bg-white"
                   type="email"
                   placeholder="Email"
+                  name="email"
                 />
                 <input
                   class="w-full px-8 py-4 rounded-lg font-medium bg-gray-100 border border-gray-200 placeholder-gray-500 text-sm focus:outline-none focus:border-gray-400 focus:bg-white mt-5"
                   type="password"
                   placeholder="Password"
+                  name="pass"
+                  required
                 />
                 <input
-                class="w-full px-8 py-4 rounded-lg font-medium bg-gray-100 border border-gray-200 placeholder-gray-500 text-sm focus:outline-none focus:border-gray-400 focus:bg-white mt-5"
-                type="password"
-                placeholder="Confirm Password"
-              />
+                  class="w-full px-8 py-4 rounded-lg font-medium bg-gray-100 border border-gray-200 placeholder-gray-500 text-sm focus:outline-none focus:border-gray-400 focus:bg-white mt-5"
+                  type="password"
+                  placeholder="Confirm Password"
+                  name="repass"
+                  required
+                />
                 <button
                   class="mt-5 tracking-wide font-semibold bg-indigo-500 text-gray-100 w-full py-4 rounded-lg hover:bg-indigo-700 transition-all duration-300 ease-in-out flex items-center justify-center focus:shadow-outline focus:outline-none"
+                  type="submit"
                 >
                   <span class="ml-3"> Register </span>
                 </button>
@@ -112,7 +130,18 @@
                     Privacy Policy
                   </a>
                 </p>
-              </div>
+                <br />
+
+                <p class="flex items-center justify-center">
+                  Already have an account? :>
+                </p>
+                <a
+                  class="mt-5 tracking-wide font-semibold bg-indigo-500 text-gray-100 w-full py-4 rounded-lg hover:bg-indigo-700 transition-all duration-300 ease-in-out flex items-center justify-center focus:shadow-outline focus:outline-none bg-transparent hover:bg-indigo-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded"
+                  href="/login"
+                >
+                  <span class="ml-3"> Login </span>
+                </a>
+              </form>
             </div>
           </div>
         </div>
@@ -127,4 +156,16 @@
       </div>
     </div>
   </body>
+  <script src="https://cdn.jsdelivr.net/npm/simple-notify@0.5.5/dist/simple-notify.min.js"></script>
+  <script>
+   window.addEventListener("DOMContentLoaded", (event) => { let errorMess =
+    `<%=errorMessage%>`; console.log(errorMess); 
+    if(errorMess)
+    {
+      myNotify = new Notify({ status:
+    'error', title: 'Error', text: errorMess, effect: 'slide', type: 3, autoclose:true })
+    }
+     });
+  </Script>
+  </script>
 </html>
