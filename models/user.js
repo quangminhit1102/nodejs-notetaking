@@ -16,5 +16,7 @@ const userSchema = new Schema({
     type: String,
     default: shortid.generate,
   },
+  resetPassword: String,
+  resetPasswordExpire: String,
 });
 module.exports = mongoose.model("User", userSchema);

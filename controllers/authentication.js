@@ -1,5 +1,7 @@
 const bcryptjs = require("bcryptjs"); //Encript Password
 const User = require("../models/user"); //Model User
+const mail = require("../util/sendMail");
+const { json } = require("express");
 
 //Get Sign In
 exports.getLogin = (req, res, next) => {
@@ -103,5 +105,32 @@ exports.postLogOut = (req, res, next) => {
   req.session.destroy((err) => {
     console.log(err);
     res.redirect("/login");
+  });
+};
+//Get SignUp
+exports.getForgotPass = (req, res, next) => {
+  let message = req.flash("error");
+  if (message.length > 0) {
+    message = message[0];
+  } else {
+    message = null;
+  }
+  res.render("../views/authentication/forgotpassword", {
+    path: "/forgot-password",
+    pageTitle: "Authentication",
+    errorMessage: message,
+  });
+};
+// Post Sign Up
+exports.postForgotPass = (req, res, next) => {
+  const email = req.body.email;
+  User.findOne({ email: email }).then((userDoc) => {
+    if (userDoc) {
+      mail.sendMail("minh1122000@gmail.com", "", "");
+      return json(true);
+    } else {
+      req.flash("error", "Email doesn't exist!");
+      return res.redirect("/forgot-password");
+    }
   });
 };

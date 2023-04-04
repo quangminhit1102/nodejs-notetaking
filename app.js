@@ -33,11 +33,10 @@ const authRoutes = require("./routes/authentication");
 const errorController = require("./controllers/errorController");
 app.use(authRoutes);
 
-// app.use((req, res, next) => {
-//   res.locals.isAuthenticated = req.session.isLoggedIn;
-//   res.render("../views/index");
-// });
-
+app.use((req, res, next) => {
+  res.locals.isAuthenticated = req.session.isLoggedIn;
+  next();
+});
 app.use(errorController.get404);
 
 // Listening TO PORT
