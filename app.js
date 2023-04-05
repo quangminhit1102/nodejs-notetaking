@@ -6,6 +6,7 @@ const router = express.Router(); // Router
 const session = require("express-session"); // Express-Session
 const app = express(); // App Instance
 const MongoDBStore = require("connect-mongodb-session")(session);
+app.use(express.static(path.join(__dirname, "public")));
 const store = new MongoDBStore({
   uri: process.env.MOOGOOSE_CONNECTION,
   collection: "sessions",
@@ -31,7 +32,9 @@ app.use(flash());
 // Routes
 const authRoutes = require("./routes/authentication");
 const errorController = require("./controllers/errorController");
+const noteController = require("./controllers/noteController")
 app.use(authRoutes);
+app.use(noteController)
 
 app.use((req, res, next) => {
   res.locals.isAuthenticated = req.session.isLoggedIn;
