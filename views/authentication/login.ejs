@@ -7,6 +7,10 @@
     <title>Login To Note App</title>
     <meta name="robots" content="noindex, nofollow" />
     <script src="https://cdn.tailwindcss.com/3.1.4"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/simple-notify@0.5.5/dist/simple-notify.min.css"
+    />
   </head>
 
   <body>
@@ -139,9 +143,21 @@
       </div>
     </div>
   </body>
-  <Script>
-    window.addEventListener("DOMContentLoaded", (event) => { let errorMess =
-    `<%=errorMessage%>`; console.log(errorMess); myNotify = new Notify({ status:
-    'error', title: 'Error', text: errorMess, effect: 'slide', type: 3 }) });
-  </Script>
+  <script src="https://cdn.jsdelivr.net/npm/simple-notify@0.5.5/dist/simple-notify.min.js"></script>
+  <script>
+    window.addEventListener("DOMContentLoaded", (event) => {
+      let errorMess = `<%=errorMessage%>`;
+      console.log(errorMess);
+      if (errorMess) {
+        myNotify = new Notify({
+          status: "error",
+          title: "Error",
+          text: errorMess,
+          effect: "slide",
+          type: 3,
+          autoclose: true,
+        });
+      }
+    });
+  </script>
 </html>

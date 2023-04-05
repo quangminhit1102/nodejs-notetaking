@@ -2,6 +2,8 @@ const bcryptjs = require("bcryptjs"); //Encript Password
 const User = require("../models/user"); //Model User
 const mail = require("../util/sendMail");
 const { json } = require("express");
+const shortid = require("shortid");
+require("dotenv").config(); // .Env config
 
 //Get Sign In
 exports.getLogin = (req, res, next) => {
@@ -109,16 +111,13 @@ exports.postLogOut = (req, res, next) => {
 };
 //Get SignUp
 exports.getForgotPass = (req, res, next) => {
-  let message = req.flash("error");
-  if (message.length > 0) {
-    message = message[0];
-  } else {
-    message = null;
-  }
+  let errorMessage = req.flash("error")?.[0];
+  let successMessage = req.flash("success")?.[0];
   res.render("../views/authentication/forgotpassword", {
     path: "/forgot-password",
     pageTitle: "Authentication",
-    errorMessage: message,
+    errorMessage: errorMessage,
+    successMessage: successMessage,
   });
 };
 // Post Sign Up
@@ -126,11 +125,38 @@ exports.postForgotPass = (req, res, next) => {
   const email = req.body.email;
   User.findOne({ email: email }).then((userDoc) => {
     if (userDoc) {
-      mail.sendMail("minh1122000@gmail.com", "", "");
-      return json(true);
+      let token = shortid.generate();
+      userDoc.resetPassword = token;
+      userDoc.save();
+      // Send Mail
+      let html = `<h1>Please Follow this link to Reset Password.</h1><a href="${process.env.BASE_URL}/Reset-Password/${token}">Click Here To Fly.</a>`;
+      mail.sendMail(email, "Forgot Password", html).then((error, info) => {
+        console.log(res);
+        if (error) {
+          req.flash("success", "Sent Mail to Reset Password!");
+          return res.redirect("/forgot-password");
+        } else {
+          req.flash("error", "There was an Error!");
+          return res.redirect("/forgot-password");
+        }
+      });
     } else {
       req.flash("error", "Email doesn't exist!");
       return res.redirect("/forgot-password");
     }
   });
+};
+// Reset Password
+exports.getResetPassword = (req, res, next) => {
+  let errorMessage = req.flash("error")?.[0];
+  let successMessage = req.flash("success")?.[0];
+  res.render("../views/authentication/resetpasword", {
+    path: "/reset-pasword",
+    pageTitle: "Authentication",
+    errorMessage: errorMessage,
+    successMessage: successMessage,
+  });
+};
+exports.postResetPassword = (req, res, next) => {
+  console.log(req.params.token)
 };

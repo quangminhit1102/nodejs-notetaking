@@ -1,6 +1,6 @@
 const nodemailer = require("nodemailer");
 require("dotenv").config(); // .Env config
-exports.sendMail = async (mailTo, subject, body) => {
+exports.sendMail = (mailTo, subject, body) => {
   var transporter = nodemailer.createTransport({
     // config mail server
     host: "smtp.gmail.com",
@@ -16,16 +16,10 @@ exports.sendMail = async (mailTo, subject, body) => {
     },
   });
   var mainOptions = {
-    from: "Hello",
+    from: "Note Taking App",
     to: mailTo,
-    subject: "Test Nodemailer",
-    html: "hello",
+    subject: subject,
+    html: body,
   };
-  transporter.sendMail(mainOptions, function (err, info) {
-    if (err) {
-      console.log(err);
-    } else {
-      console.log("Message sent: " + info.response);
-    }
-  });
+  return transporter.sendMail(mainOptions);
 };
