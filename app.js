@@ -14,6 +14,8 @@ const store = new MongoDBStore({
 
 app.set("view engine", "ejs"); // View Engine
 app.set("views", "views"); // Set views Folder
+app.use(express.static(__dirname + "/public/"));
+// console.log(__dirname + "/public/assets/");
 app.use(express.urlencoded({ extended: true })); //It parses incoming requests with urlencoded payloads
 const flash = require("connect-flash");
 const mongoose = require("mongoose");
@@ -31,16 +33,16 @@ app.use(flash());
 
 // Routes
 const authRoutes = require("./routes/authentication");
-const errorController = require("./controllers/errorController");
-const noteController = require("./controllers/noteController")
+const homeRoutes = require("./routes/home");
+
 app.use(authRoutes);
-app.use(noteController)
+app.use(homeRoutes);
 
 app.use((req, res, next) => {
   res.locals.isAuthenticated = req.session.isLoggedIn;
   next();
 });
-app.use(errorController.get404);
+// app.use(errorController.get404);
 
 // Listening TO PORT
 app.listen(process.env.PORT, () => {
