@@ -3,8 +3,8 @@ const shortid = require("shortid");
 
 const Schema = mongoose.Schema;
 
-const topicSchema = new Schema({
-  name: {
+const typeSchema = new Schema({
+  title: {
     type: String,
     required: true,
   },
@@ -12,9 +12,13 @@ const topicSchema = new Schema({
     type: String,
     required: true,
   },
+  color: {
+    type: String,
+    default: "#fff",
+  },
   _id: {
     type: String,
     default: shortid.generate,
   },
 });
-module.exports = mongoose.model("Topic", topicSchema);
+module.exports = mongoose.model("Type", typeSchema);

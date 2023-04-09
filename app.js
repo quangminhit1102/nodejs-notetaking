@@ -7,6 +7,11 @@ const session = require("express-session"); // Express-Session
 const app = express(); // App Instance
 const MongoDBStore = require("connect-mongodb-session")(session);
 app.use(express.static(path.join(__dirname, "public")));
+var bodyParser = require('body-parser')
+app.use( bodyParser.json() );       // to support JSON-encoded bodies
+app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
+  extended: true
+})); 
 const store = new MongoDBStore({
   uri: process.env.MOOGOOSE_CONNECTION,
   collection: "sessions",
@@ -34,9 +39,11 @@ app.use(flash());
 // Routes
 const authRoutes = require("./routes/authentication");
 const homeRoutes = require("./routes/home");
+const noteRoutes = require("./routes/note");
 
 app.use(authRoutes);
 app.use(homeRoutes);
+app.use(noteRoutes);
 
 app.use((req, res, next) => {
   res.locals.isAuthenticated = req.session.isLoggedIn;

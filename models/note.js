@@ -12,9 +12,15 @@ const noteSchema = new Schema({
     type: String,
     required: true,
   },
+  image:{
+    type:string
+  },
   _id: {
     type: String,
     default: shortid.generate,
   },
+  user:{
+    
+  }
 });
 module.exports = mongoose.model("User", userSchema);
