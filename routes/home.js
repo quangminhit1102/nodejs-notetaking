@@ -6,12 +6,7 @@ const homeController = require("../controllers/homeController");
 
 const router = express.Router();
 
-router.get("/", (req, res, next) => {
-  res.render("../views/index.ejs");
-});
-router.get("/take-note", (req, res, next) => {
-  let baseURL = process.env.BASE_URL;
-  res.render("../views/notetaking.ejs", { baseURL: baseURL });
-});
+router.get("/", homeController.getHome);
+router.get("/take-note", homeController.getTakeNote);
 
 module.exports = router;

@@ -13,6 +13,10 @@ exports.getLogin = (req, res, next) => {
   } else {
     message = null;
   }
+  if(req.session.user)
+  {
+    res.redirect("/")
+  }
   res.render("../views/authentication/login", {
     path: "/login",
     pageTitle: "Login",

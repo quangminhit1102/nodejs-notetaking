@@ -1792,10 +1792,6 @@ PopUp
   color: #fff;
 }
 
-.btn:hover {
-  background: #e4e4e2;
-}
-
 .btn_red:hover {
   color: #2a2a2a;
   background: #e4e4e2;
@@ -2337,4 +2333,7 @@ responsive
   -webkit-box-orient: vertical;
   overflow: hidden;
   mix-blend-mode: darken;
+}
+.button-filter button {
+  margin-right: 5px;
 }

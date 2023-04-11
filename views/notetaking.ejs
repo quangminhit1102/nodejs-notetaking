@@ -31,8 +31,8 @@
             </button>
           </div>
           <br />
-
-          <div
+          <div class="row note-list">
+            <div
             class="gallery_product col-lg-4 col-md-4 col-sm-4 col-xs-6 filter hdpe"
           >
             <div class="note-body p-4">
@@ -99,7 +99,7 @@
               <div class="note-title">
                 Adding Page to tcdcccccccccccccccchis app
               </div>
-              <div class="note-content">
+              <div class="row note-content">
                 sdfsdfsdfsdfsdfsdf\ndfsdfsdfsdfsf Lorem ipsum dolor sit amet
                 consectetur, adipisicing elit. Commodi quasi adipisci eos beatae
                 omnis, odit vitae delectus perspiciatis unde, reiciendis
@@ -241,6 +241,7 @@
                 explicabo placeat dicta tempora.
               </div>
             </div>
+          </div>
           </div>
         </div>
       </div>
@@ -375,17 +376,23 @@
             <form>
               <div class="form-group">
                 <label for="Title" class="col-form-label">Title:</label>
-                <input type="text" class="form-control" id="recipient-name">
+                <input type="text" class="form-control" id="noteTitle" name="noteTitle">
               </div>
               <div class="form-group">
                 <label for="message-text" class="col-form-label">Message:</label>
-                <textarea class="form-control" id="message-text"></textarea>
+                <textarea class="form-control" id="noteContent" name="noteContent"></textarea>
+              </div>
+              <div class="form-group">
+                <label for="message-text" class="col-form-label">Type:</label>
+                <select class="form-control" id="nodeType" aria-label="Default select example">
+                  <option selected value="0">Open this select menu</option>
+                </select>
               </div>
             </form>
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-            <button type="button" class="btn btn-primary">Send message</button>
+            <button type="button"  class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button type="button" id="createNoteBtn" class="btn btn-primary">Create Note</button>
           </div>
         </div>
       </div>
@@ -460,6 +467,7 @@
     <script src="https://cdn.jsdelivr.net/npm/simple-notify@0.5.5/dist/simple-notify.min.js"></script>
     <script>
       const loadType = async function(){
+        $(".button-filter").html("")
         $.ajax({  
             url:'/type',  
             method:'get',  
@@ -467,10 +475,46 @@
             success:function(response){  
                 if(!response.error){  
                   console.log(response.data);
+                  $(".button-filter").append(`<button class="btn btn-default" data-filter="all">All</button>`)
                   let data = response.data;
                   data.forEach(item=>{
-                    let button = `<button class="btn btn-default mr-2" style="background-color:${item.color};" data-filter="all">${item.title}</button>`
+                    let button = `<button class="btn btn-default border border-dark" title="${item.description}" style="background-color:${item.color};" data-filter="all">${item.title}</button>`
                     $(".button-filter").append(button);
+                  })
+                }else{  
+                  alert('Error')     
+                }  
+            },  
+            error:function(response){  
+                alert('server error')     
+            }}
+      )}
+      const loadNote = async function(){
+        $(".note-list").html("")
+        $.ajax({  
+            url:'/note',  
+            method:'get',  
+            dataType:'json',  
+            success:function(response){  
+                if(!response.error){  
+                  console.log(response.data);
+                  let data = response.data;
+                  data.forEach(item=>{
+                    let card = `<div class="gallery_product col-lg-4 col-md-4 col-sm-4 col-xs-6 filter hdpe">
+            <div class="note-body p-4">
+              <div class="note-title">
+                ${item.title}
+              </div>
+              <div class="note-content">
+                ${item.content}
+              </div>
+            </div>
+          </div>`
+                    $(".note-list").append(card);
+                  })
+                  data.forEach(item=>{
+                    let option = `<option value="${item._id}">${item.title}</option>`;
+                    $("#nodeType").append(option);
                   })
                 }else{  
                   alert('Error')     
@@ -482,6 +526,7 @@
       )}
       $(document).ready(function(){
         loadType()
+        loadNote()
         $("#createTypeBtn").click((e)=>{
           let typeTitle = $("#typeTitle").val()
           let typeDescription = $("#typeTitle").val()
@@ -520,6 +565,47 @@
             }  
         });  
         })
+
+
+        $("#createNoteBtn").click((e)=>{
+          let noteTitle = $("#noteTitle").val()
+          let noteContent = $("#noteContent").val()
+          // let image = $("#typeColor").val()
+          $.ajax({  
+            url:'/note/add-new',  
+            method:'post',  
+            dataType:'json',  
+            data:{'title':noteTitle,'content':noteContent,'image':""},  
+            success:function(response){  
+              console.log(response)
+                if(!response.error){  
+                  myNotify = new Notify({
+                    status: "success",
+                    title: "Success",
+                    text: response.message,
+                    effect: "slide",
+                    type: 3,
+                    autoclose: true,
+                  });  
+                    $("#addNoteModal form")[0].reset();
+                    loadNote()
+                }else{  
+                  myNotify = new Notify({
+                    status: "error",
+                    title: "Error",
+                    text: response.message,
+                    effect: "slide",
+                    type: 3,
+                    autoclose: true,
+                  });   
+                }  
+            },  
+            error:function(response){  
+                alert('server error')     
+            }  
+        });  
+        })
+
       })
     </script>
 

@@ -20,5 +20,11 @@ const typeSchema = new Schema({
     type: String,
     default: shortid.generate,
   },
+  notes: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Note",
+    },
+  ],
 });
 module.exports = mongoose.model("Type", typeSchema);

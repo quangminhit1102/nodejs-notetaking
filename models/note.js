@@ -12,15 +12,17 @@ const noteSchema = new Schema({
     type: String,
     required: true,
   },
-  image:{
-    type:string
+  image: {
+    type: String,
   },
   _id: {
     type: String,
     default: shortid.generate,
   },
-  user:{
-    
-  }
+  user: {},
+  type: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Type",
+  },
 });
-module.exports = mongoose.model("User", userSchema);
+module.exports = mongoose.model("Note", noteSchema);

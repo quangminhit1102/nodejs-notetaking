@@ -1,5 +1,6 @@
 const { json } = require("express");
 const Type = require("../models/type"); //Model Type
+const Note = require("../models/note"); //Model Note
 const { errorMonitor } = require("nodemailer/lib/xoauth2");
 
 // Get All Type
@@ -101,4 +102,41 @@ exports.deleteTypeById = (req, res, next) => {
       });
     }
   });
+};
+
+// Create new Note
+exports.postAddNote = (req, res, next) => {
+  const title = req.body.title;
+  const content = req.body.content;
+  const image = req.body.image;
+  let newNote = new Note({
+    title: title,
+    content: content,
+    image: image,
+  });
+  newNote.save().then((result) => {
+    if (result.errors) {
+      return res.status(200).json(result);
+    } else {
+      return res.json({
+        error: false,
+        message: "Create note successfully!",
+        data: [],
+      });
+    }
+  });
+};
+// Get All Type
+exports.getAllNote = (req, res, next) => {
+  Note.find({})
+    .then((result) => {
+      return res.json({
+        error: false,
+        message: "Get data success",
+        data: result,
+      });
+    })
+    .catch((err) => {
+      return res.json({ error: true, message: err, data: result });
+    });
 };
