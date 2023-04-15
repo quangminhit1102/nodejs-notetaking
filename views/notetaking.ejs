@@ -474,12 +474,16 @@
             dataType:'json',  
             success:function(response){  
                 if(!response.error){  
-                  console.log(response.data);
+                  // console.log(response.data);
                   $(".button-filter").append(`<button class="btn btn-default" data-filter="all">All</button>`)
                   let data = response.data;
                   data.forEach(item=>{
                     let button = `<button class="btn btn-default border border-dark" title="${item.description}" style="background-color:${item.color};" data-filter="all">${item.title}</button>`
                     $(".button-filter").append(button);
+                  })
+                  data.forEach(item=>{
+                    let option = `<option value="${item._id}">${item.title}</option>`;
+                    $("#nodeType").append(option);
                   })
                 }else{  
                   alert('Error')     
@@ -500,7 +504,8 @@
                   console.log(response.data);
                   let data = response.data;
                   data.forEach(item=>{
-                    let card = `<div class="gallery_product col-lg-4 col-md-4 col-sm-4 col-xs-6 filter hdpe">
+                    console.log(item)
+                    let card = `<div class="gallery_product col-lg-4 col-md-4 col-sm-4 col-xs-6 filter hdpe" style="${item.type.color}">
             <div class="note-body p-4">
               <div class="note-title">
                 ${item.title}
@@ -512,11 +517,9 @@
           </div>`
                     $(".note-list").append(card);
                   })
-                  data.forEach(item=>{
-                    let option = `<option value="${item._id}">${item.title}</option>`;
-                    $("#nodeType").append(option);
-                  })
-                }else{  
+                  
+                }
+                  else{  
                   alert('Error')     
                 }  
             },  
@@ -571,11 +574,12 @@
           let noteTitle = $("#noteTitle").val()
           let noteContent = $("#noteContent").val()
           // let image = $("#typeColor").val()
+          let noteType = $("#nodeType").val()
           $.ajax({  
             url:'/note/add-new',  
             method:'post',  
             dataType:'json',  
-            data:{'title':noteTitle,'content':noteContent,'image':""},  
+            data:{'title':noteTitle,'content':noteContent,'image':"",'noteType':noteType},  
             success:function(response){  
               console.log(response)
                 if(!response.error){  
@@ -608,6 +612,5 @@
 
       })
     </script>
-
   </body>
 </html>

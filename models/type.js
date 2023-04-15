@@ -22,7 +22,7 @@ const typeSchema = new Schema({
   },
   notes: [
     {
-      type: mongoose.Schema.Types.ObjectId,
+      type: Schema.Types.ObjectId,
       ref: "Note",
     },
   ],
