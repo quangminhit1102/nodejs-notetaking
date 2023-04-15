@@ -22,7 +22,7 @@ const typeSchema = new Schema({
   },
   notes: [
     {
-      type: Schema.Types.ObjectId,
+      type: String,
       ref: "Note",
     },
   ],

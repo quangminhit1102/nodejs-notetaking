@@ -3,20 +3,6 @@ const Type = require("../models/type"); //Model Type
 const Note = require("../models/note"); //Model Note
 const { errorMonitor, promises } = require("nodemailer/lib/xoauth2");
 
-exports.getTypeById = (req, res, next) => {
-  let { typeId } = req.body;
-  Type.find({ _id: typeId }).then((result) => {
-    return res
-      .json({
-        error: false,
-        message: "Get data success",
-        data: result,
-      })
-      .catch((err) => {
-        return res.json({ error: true, message: err, data: result });
-      });
-  });
-};
 // Get All Type
 exports.getAllType = (req, res, next) => {
   Type.find({})
@@ -68,9 +54,17 @@ exports.postAddType = (req, res, next) => {
 // Get One Type By ID
 exports.getTypeById = (req, res, next) => {
   let _id = req.params.id;
-  Type.find({ _id: _id }).then((result) => {
-    return res.status(200).json(result);
-  });
+  Type.findOne({ _id: _id })
+    .then((result) => {
+      return res.status(200).json({
+        error: false,
+        message: "Get data success",
+        data: result,
+      });
+    })
+    .catch((err) => {
+      return res.json({ error: true, message: err, data: [] });
+    });
 };
 // Edit Type by ID
 exports.postEditTypeById = (req, res, next) => {
@@ -124,31 +118,48 @@ exports.postAddNote = (req, res, next) => {
   const content = req.body.content;
   const image = req.body.image;
   const typeId = req.body.noteType;
-  Type.find({ _id: typeId }).then((type) => {
-    if (type) {
-      let newNote = new Note({
-        title: title,
-        content: content,
-        image: image,
-        type: type,
+  Note.create({
+    title: title,
+    content: content,
+    image: image,
+  }).then((result) => {
+    Type.findByIdAndUpdate(typeId, { $push: { notes: result._id } })
+      .then((result) => {
+        return res.json({
+          error: false,
+          message: "Create note successfully!",
+          data: [],
+        });
+      })
+      .catch((err) => {
+        return res.json({ error: true, message: err, data: result });
       });
-      newNote.save().then((result) => {
-        if (result.errors) {
-          return res.status(200).json(result);
-        } else {
-          type.notes.push(newNote);
-          type.save();
-          return res.json({
-            error: false,
-            message: "Create note successfully!",
-            data: [],
-          });
-        }
-      });
-    } else {
-      return res.json({ error: true, message: err, data: result });
-    }
   });
+  // Type.findOne({ _id: typeId }).then((type) => {
+  //   if (type) {
+  //     let newNote = new Note({
+  //       title: title,
+  //       content: content,
+  //       image: image,
+  //       type: type,
+  //     });
+  //     newNote.save().then((result) => {
+  //       if (result.errors) {
+  //         return res.status(200).json(result);
+  //       } else {
+  //         type.notes.push(newNote);
+  //         type.save();
+  //         return res.json({
+  //           error: false,
+  //           message: "Create note successfully!",
+  //           data: [],
+  //         });
+  //       }
+  //     });
+  //   } else {
+  //     return res.json({ error: true, message: err, data: result });
+  //   }
+  // });
 };
 // Get All Type
 exports.getAllNote = (req, res, next) => {

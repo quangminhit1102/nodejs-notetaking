@@ -21,7 +21,7 @@ const noteSchema = new Schema({
   },
   user: {},
   type: {
-    type: Schema.Types.ObjectId,
+    type: String,
     ref: "Type",
   },
 });

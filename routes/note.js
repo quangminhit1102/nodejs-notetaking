@@ -8,8 +8,8 @@ const router = express.Router();
 
 //Type
 router.get("/type", noteController.getAllType);
-router.post("/type/add-new", noteController.postAddType);
 router.get("/type/:id", noteController.getTypeById);
+router.post("/type/add-new", noteController.postAddType);
 router.post("/type/:id", noteController.postEditTypeById);
 router.delete("/type/:id", noteController.deleteTypeById);
 
