@@ -2309,7 +2309,7 @@ responsive
   border-radius: 13px;
   border: 1px solid #000;
   color: #2a2a2a;
-  overflow: hidden;
+  position: relative;
 }
 .gallery_product:hover {
   transition: 0.3s ease;
@@ -2324,7 +2324,6 @@ responsive
   font-weight: bold;
   font-size: 20px;
   margin-bottom: 20px;
-  mix-blend-mode: darken;
 }
 .gallery_product .note-content {
   padding-left: 10px;
@@ -2332,7 +2331,21 @@ responsive
   -webkit-line-clamp: 9;
   -webkit-box-orient: vertical;
   overflow: hidden;
-  mix-blend-mode: darken;
+}
+.gallery_product .note-ribbon {
+  position: absolute;
+  top: 12px;
+  left: 0px;
+  width: 410px;
+  height: 50px;
+  padding: 0 0.5em;
+  font-size: 2em;
+  margin: 0 0 0 -0.4em;
+  line-height: 1.875em;
+  color: #e6e2c8;
+  border-radius: 0 0.156em 0.156em 0;
+  background: rgb(123, 159, 199);
+  box-shadow: -1px 2px 3px rgba(0, 0, 0, 0.5);
 }
 .button-filter button {
   margin-right: 5px;

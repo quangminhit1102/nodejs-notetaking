@@ -122,6 +122,7 @@ exports.postAddNote = (req, res, next) => {
     title: title,
     content: content,
     image: image,
+    type:typeId
   }).then((result) => {
     Type.findByIdAndUpdate(typeId, { $push: { notes: result._id } })
       .then((result) => {

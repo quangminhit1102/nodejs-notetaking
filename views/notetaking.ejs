@@ -466,6 +466,20 @@
     <script src="assets/js/custom.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/simple-notify@0.5.5/dist/simple-notify.min.js"></script>
     <script>
+      // Handler Background
+      const loadColor = function(){
+          document.querySelectorAll(".note-ribbon").forEach(item=>{
+          let rgb = item.style.backgroundColor;
+          var colors = rgb.match(/^rgb\((\d+),\s*(\d+),\s*(\d+)\)$/);
+          console.log(colors[1],colors[2],colors[3])
+
+          let ir = Math.floor((255-colors[1])*1);
+          let ig = Math.floor((255-colors[2])*1);
+          let ib = Math.floor((255-colors[3])*1);
+          
+          item.nextElementSibling.style.color = `rgb(${ir},${ig},${ib})`;
+        })
+        }
       const loadType = async function(){
         $(".button-filter").html("")
         $.ajax({  
@@ -501,15 +515,17 @@
             dataType:'json',  
             success:function(response){  
                 if(!response.error){  
+                  loadColor()
                   console.log(response.data);
                   let data = response.data;
                   data.forEach(item=>{
                     console.log(item)
-                    let card = `<div class="gallery_product col-lg-4 col-md-4 col-sm-4 col-xs-6 filter hdpe" style="${item.type.color}">
+                    let card = `<div class="gallery_product col-lg-4 col-md-4 col-sm-4 col-xs-6 filter hdpe" >
             <div class="note-body p-4">
               <div class="note-title">
                 ${item.title}
               </div>
+              <span class="note-ribbon" style="background-color:${item.type.color}"></span>
               <div class="note-content">
                 ${item.content}
               </div>
@@ -609,7 +625,6 @@
             }  
         });  
         })
-
       })
     </script>
   </body>
