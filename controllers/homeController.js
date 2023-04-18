@@ -1,3 +1,4 @@
+const session = require("express-session");
 const user = require("../models/user");
 
 exports.getTakeNote = (req, res, next) => {
@@ -9,8 +10,8 @@ exports.getTakeNote = (req, res, next) => {
 };
 exports.getHome = (req, res, next) => {
   if (req?.session?.user) {
-     res.render("../views/index.ejs", { user: req.session.user });
+    res.render("../views/index.ejs", { user: req.session.user });
   } else {
-     res.redirect("/login");
+    res.redirect("/login");
   }
 };

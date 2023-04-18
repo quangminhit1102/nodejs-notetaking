@@ -13,14 +13,14 @@ exports.getLogin = (req, res, next) => {
   } else {
     message = null;
   }
-  if(req.session.user)
-  {
-    res.redirect("/")
+  if (req.session.user) {
+    res.redirect("/");
   }
   res.render("../views/authentication/login", {
     path: "/login",
     pageTitle: "Login",
     errorMessage: message,
+    successMessage:"",
   });
 };
 // Post Login
@@ -31,7 +31,7 @@ exports.postLogin = (req, res, next) => {
     .then((user) => {
       if (!user) {
         req.flash("error", "Invalid email or password.");
-        return res.redirect("../views/authentication/login");
+        return res.redirect("/login");
       }
       bcryptjs
         .compare(password, user.password)
@@ -107,7 +107,7 @@ exports.postSignup = (req, res, next) => {
     });
 };
 // Post Log Out
-exports.postLogOut = (req, res, next) => {
+exports.getLogout = (req, res, next) => {
   req.session.destroy((err) => {
     console.log(err);
     res.redirect("/login");
@@ -179,6 +179,7 @@ exports.postResetPassword = (req, res, next) => {
             return userDoc.save();
           })
           .then((result) => {
+            req.flash("success", "Reset password successfully!");
             res.redirect("/login");
           });
       } else {

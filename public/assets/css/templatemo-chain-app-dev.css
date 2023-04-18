@@ -2334,6 +2334,7 @@ responsive
 }
 .gallery_product .note-ribbon {
   position: absolute;
+  z-index: -1;
   top: 12px;
   left: 0px;
   width: 410px;
@@ -2343,7 +2344,7 @@ responsive
   margin: 0 0 0 -0.4em;
   line-height: 1.875em;
   color: #e6e2c8;
-  border-radius: 0 0.156em 0.156em 0;
+  border-radius: 15px;
   background: rgb(123, 159, 199);
   box-shadow: -1px 2px 3px rgba(0, 0, 0, 0.5);
 }

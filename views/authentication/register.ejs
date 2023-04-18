@@ -158,13 +158,31 @@
   </body>
   <script src="https://cdn.jsdelivr.net/npm/simple-notify@0.5.5/dist/simple-notify.min.js"></script>
   <script>
-   window.addEventListener("DOMContentLoaded", (event) => { let errorMess =
-    `<%=errorMessage%>`; console.log(errorMess); 
-    if(errorMess)
-    {
-      myNotify = new Notify({ status:
-    'error', title: 'Error', text: errorMess, effect: 'slide', type: 3, autoclose:true })
-    }
-     });
-  </Script>
+    window.addEventListener("DOMContentLoaded", (event) => {
+      let errorMess = `<%=errorMessage%>`;
+      console.log(errorMess);
+      if (errorMess) {
+        myNotify = new Notify({
+          status: "error",
+          title: "Error",
+          text: errorMess,
+          effect: "slide",
+          type: 3,
+          autoclose: true,
+        });
+      }
+      //Success message
+      let successMess = `<%=successMessage%>`;
+      if (successMess) {
+        new Notify({
+          status: "success",
+          title: "Success",
+          text: successMess,
+          effect: "slide",
+          type: 3,
+          autoclose: true,
+        });
+      }
+    });
+  </script>
 </html>

@@ -93,11 +93,22 @@ https://templatemo.com/tm-570-chain-app-dev
                   <a href="#newsletter">New Note</a>
                 </li>
                 <li>
+                  <% if(user) { %>
                   <div class="gradient-button">
-                    <a id="Login" href="/login"
-                      ><i class="fa fa-sign-in-alt"></i> Login
+                    <a id="Login" href="/logout">
+                      <i class="fa fa-sign-in-alt"></i>
+                      <%=user.email%>
                     </a>
                   </div>
+                  <% }else { %>
+                  <div class="gradient-button">
+                    <a
+                      id="Login"
+                      href="/login"
+                      ><i class="fa fa-sign-in-alt"> Login </i>
+                    </a>
+                  </div>
+                  <% } %>
                 </li>
               </ul>
               <a class="menu-trigger">
