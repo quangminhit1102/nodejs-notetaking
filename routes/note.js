@@ -6,15 +6,18 @@ const noteController = require("../controllers/noteController");
 
 const router = express.Router();
 
-//Type
+//Type API
 router.get("/type", noteController.getAllType);
 router.get("/type/:id", noteController.getTypeById);
 router.post("/type/add-new", noteController.postAddType);
-router.post("/type/:id", noteController.postEditTypeById);
+router.patch("/type/:id", noteController.patchEditTypeById);
 router.delete("/type/:id", noteController.deleteTypeById);
 
-//Note
+//Note API
 router.get("/note", noteController.getAllNote);
 router.post("/note/add-new", noteController.postAddNote);
+router.get("/note/:id", noteController.getNoteById);
+router.patch("/note/:id", noteController.patchEditNoteById);
+router.delete("/note/:id", noteController.deleteNoteById);
 
 module.exports = router;

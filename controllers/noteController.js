@@ -1,7 +1,6 @@
 const { json } = require("express");
 const Type = require("../models/type"); //Model Type
 const Note = require("../models/note"); //Model Note
-const { errorMonitor, promises } = require("nodemailer/lib/xoauth2");
 
 // Get All Type
 exports.getAllType = (req, res, next) => {
@@ -22,34 +21,46 @@ exports.postAddType = (req, res, next) => {
   const title = req.body.title;
   const color = req.body.color;
   const description = req.body.description;
-
-  Type.findOne({ title: title }).then((type) => {
-    if (type) {
-      return res.json({
-        error: true,
-        message: "Already have that Type!",
-        data: [],
-      });
-    } else {
-      let newType = new Type({
-        title: title,
-        color: color,
-        description: description,
-      });
-      console.log(req.body);
-      newType.save().then((result) => {
-        if (result.errors) {
-          return res.status(200).json(result);
-        } else {
-          return res.json({
-            error: false,
-            message: "Create type successfully!",
-            data: [],
-          });
-        }
-      });
-    }
+  let { error } = Type.Validate({
+    title: title,
+    color: color,
+    description: description,
   });
+  if (error == null) {
+    Type.findOne({ title: title }).then((type) => {
+      if (type) {
+        return res.json({
+          error: true,
+          message: "Already have that Type!",
+          data: [],
+        });
+      } else {
+        let newType = new Type({
+          title: title,
+          color: color,
+          description: description,
+        });
+        console.log(req.body);
+        newType.save().then((result) => {
+          if (result.errors) {
+            return res.status(200).json(result);
+          } else {
+            return res.json({
+              error: false,
+              message: "Create type successfully!",
+              data: [],
+            });
+          }
+        });
+      }
+    });
+  } else {
+    return res.json({
+      error: true,
+      message: error?.details[0]?.message,
+      data: [],
+    });
+  }
 };
 // Get One Type By ID
 exports.getTypeById = (req, res, next) => {
@@ -67,30 +78,42 @@ exports.getTypeById = (req, res, next) => {
     });
 };
 // Edit Type by ID
-exports.postEditTypeById = (req, res, next) => {
+exports.patchEditTypeById = (req, res, next) => {
   let _id = req.params.id;
   const { title } = req.body;
   const { color } = req.body;
   const { description } = req.body;
-
-  Type.updateOne(
-    { _id: _id },
-    { title: title, color: color, description: description }
-  ).then((err) => {
-    if (err) {
-      return res.json({
-        error: false,
-        message: "Update type successfully!",
-        data: [],
-      });
-    } else {
-      return res.json({
-        error: true,
-        message: "There was a error!",
-        data: [],
-      });
-    }
+  let { error } = Type.Validate({
+    title: title,
+    color: color,
+    description: description,
   });
+  if (error == null) {
+    Type.findOneAndUpdate(
+      { _id: _id },
+      { title: title, color: color, description: description }
+    ).then((err) => {
+      if (err) {
+        return res.json({
+          error: false,
+          message: "Update type successfully!",
+          data: [],
+        });
+      } else {
+        return res.json({
+          error: true,
+          message: "There was a error!",
+          data: [],
+        });
+      }
+    });
+  } else {
+    return res.json({
+      error: true,
+      message: error?.details[0]?.message,
+      data: [],
+    });
+  }
 };
 // Delele Type
 exports.deleteTypeById = (req, res, next) => {
@@ -118,51 +141,40 @@ exports.postAddNote = (req, res, next) => {
   const content = req.body.content;
   const image = req.body.image;
   const typeId = req.body.noteType;
-  Note.create({
+  let { error } = Note.Validate({
     title: title,
     content: content,
     image: image,
-    type:typeId
-  }).then((result) => {
-    Type.findByIdAndUpdate(typeId, { $push: { notes: result._id } })
-      .then((result) => {
-        return res.json({
-          error: false,
-          message: "Create note successfully!",
-          data: [],
-        });
-      })
-      .catch((err) => {
-        return res.json({ error: true, message: err, data: result });
-      });
+    typeId: typeId,
   });
-  // Type.findOne({ _id: typeId }).then((type) => {
-  //   if (type) {
-  //     let newNote = new Note({
-  //       title: title,
-  //       content: content,
-  //       image: image,
-  //       type: type,
-  //     });
-  //     newNote.save().then((result) => {
-  //       if (result.errors) {
-  //         return res.status(200).json(result);
-  //       } else {
-  //         type.notes.push(newNote);
-  //         type.save();
-  //         return res.json({
-  //           error: false,
-  //           message: "Create note successfully!",
-  //           data: [],
-  //         });
-  //       }
-  //     });
-  //   } else {
-  //     return res.json({ error: true, message: err, data: result });
-  //   }
-  // });
+  if (error == null) {
+    Note.create({
+      title: title,
+      content: content,
+      image: image,
+      type: typeId,
+    }).then((result) => {
+      Type.findByIdAndUpdate(typeId, { $push: { notes: result._id } })
+        .then((result) => {
+          return res.json({
+            error: false,
+            message: "Create note successfully!",
+            data: [],
+          });
+        })
+        .catch((err) => {
+          return res.json({ error: true, message: err, data: result });
+        });
+    });
+  } else {
+    return res.json({
+      error: true,
+      message: error?.details[0]?.message,
+      data: [],
+    });
+  }
 };
-// Get All Type
+// Get All Note
 exports.getAllNote = (req, res, next) => {
   Note.find()
     .populate("type")
@@ -178,4 +190,93 @@ exports.getAllNote = (req, res, next) => {
       console.log(err);
       return res.json({ error: true, message: err, data: result });
     });
+};
+//Get Note By Id
+exports.getNoteById = (req, res, next) => {
+  let _id = req.params.id;
+  Note.findById(_id)
+    .then((note) => {
+      if (note) {
+        return res.status(200).json({
+          error: false,
+          message: "Get data success!",
+          data: note,
+        });
+      } else {
+        return res.json({
+          error: true,
+          message: "Note Not Found!",
+          data: [],
+        });
+      }
+    })
+    .catch((err) => {
+      return res.json({
+        error: true,
+        message: "There was a error!",
+        data: [],
+      });
+    });
+};
+//Edit Note by Id
+exports.patchEditNoteById = (req, res, next) => {
+  let _id = req.params.id;
+  let { title } = req.body;
+  let { content } = req.body;
+  let { image } = req.body;
+  let { typeId } = req.body;
+  let { error } = Note.Validate({
+    title: title,
+    content: content,
+    image: image,
+    typeId: typeId,
+  });
+  if (error == null) {
+    Note.findByIdAndUpdate(_id, {
+      title: title,
+      content: content,
+      image: image,
+      typeId: typeId,
+    }).then((result) => {
+      if (result) {
+        return res.json({
+          error: true,
+          message: error?.details[0]?.message,
+          data: [],
+        });
+      } else {
+      }
+    }).catch(err=>{
+      return res.json({
+        error: true,
+        message: "There was a error!",
+        data: [],
+      });
+    });
+  } else {
+    return res.json({
+      error: true,
+      message: error?.details[0]?.message,
+      data: [],
+    });
+  }
+};
+// Delele Type
+exports.deleteNoteById = (req, res, next) => {
+  let _id = req.params.id;
+  Note.findOneAndRemove({ _id: _id }).then((err) => {
+    if (err) {
+      return res.json({
+        error: false,
+        message: "Delete Note successfully!",
+        data: [],
+      });
+    } else {
+      return res.json({
+        error: true,
+        message: "There was a error!",
+        data: [],
+      });
+    }
+  });
 };

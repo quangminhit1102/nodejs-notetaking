@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const shortid = require("shortid");
+const Joi = require("joi");
 
 const Schema = mongoose.Schema;
 
@@ -25,4 +26,21 @@ const noteSchema = new Schema({
     ref: "Type",
   },
 });
+const Validate = function (obj) {
+  const noteValidateSchema = Joi.object({
+    _id: Joi.string(),
+    title: Joi.string()
+      .when("_id", { is: null, then: Joi.required() })
+      .max(30)
+      .label("Title"),
+    content: Joi.string()
+      .when("_id", { is: null, then: Joi.required() })
+      .max(50)
+      .label("Content"),
+    typeId: Joi.string().when("_id", { is: null, then: Joi.required() }),
+    image: Joi.string(),
+  });
+  return noteValidateSchema.validate(obj);
+};
 module.exports = mongoose.model("Note", noteSchema);
+module.exports.Validate = Validate;
