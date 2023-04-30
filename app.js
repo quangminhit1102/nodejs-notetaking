@@ -7,11 +7,14 @@ const session = require("express-session"); // Express-Session
 const app = express(); // App Instance
 const MongoDBStore = require("connect-mongodb-session")(session);
 app.use(express.static(path.join(__dirname, "public")));
-var bodyParser = require('body-parser')
-app.use( bodyParser.json() );       // to support JSON-encoded bodies
-app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
-  extended: true
-})); 
+var bodyParser = require("body-parser");
+app.use(bodyParser.json()); // to support JSON-encoded bodies
+app.use(
+  bodyParser.urlencoded({
+    // to support URL-encoded bodies
+    extended: true,
+  })
+);
 const store = new MongoDBStore({
   uri: process.env.MOOGOOSE_CONNECTION,
   collection: "sessions",
@@ -45,11 +48,16 @@ app.use(authRoutes);
 app.use(homeRoutes);
 app.use(noteRoutes);
 
+// Check Session Login
 app.use((req, res, next) => {
   res.locals.isAuthenticated = req.session.isLoggedIn;
   next();
 });
-// app.use(errorController.get404);
+
+//404 Not Found
+app.use((req, res, next) => {
+  res.render("../views/error/404");
+});
 
 // Listening TO PORT
 app.listen(process.env.PORT, () => {

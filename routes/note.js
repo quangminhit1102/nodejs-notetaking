@@ -15,9 +15,11 @@ router.delete("/type/:id", noteController.deleteTypeById);
 
 //Note API
 router.get("/note", noteController.getAllNote);
-router.post("/note/add-new", noteController.postAddNote);
 router.get("/note/:id", noteController.getNoteById);
+router.post("/note/add-new", noteController.postAddNote);
 router.patch("/note/:id", noteController.patchEditNoteById);
 router.delete("/note/:id", noteController.deleteNoteById);
+
+//Utilites
 
 module.exports = router;

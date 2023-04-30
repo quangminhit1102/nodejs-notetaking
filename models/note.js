@@ -35,12 +35,14 @@ const Validate = function (obj) {
       .label("Title"),
     content: Joi.string()
       .when("_id", { is: null, then: Joi.required() })
-      .max(50)
+      .max(500)
       .label("Content"),
-    typeId: Joi.string().when("_id", { is: null, then: Joi.required() }),
-    image: Joi.string(),
+    image: Joi.string().allow(""),
+    typeId: Joi.string()
+      .when("_id", { is: null, then: Joi.required() })
   });
   return noteValidateSchema.validate(obj);
 };
 module.exports = mongoose.model("Note", noteSchema);
 module.exports.Validate = Validate;
+

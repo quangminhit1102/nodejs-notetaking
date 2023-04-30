@@ -2,6 +2,7 @@ const { json } = require("express");
 const Type = require("../models/type"); //Model Type
 const Note = require("../models/note"); //Model Note
 
+//#region Type API
 // Get All Type
 exports.getAllType = (req, res, next) => {
   Type.find({})
@@ -120,10 +121,12 @@ exports.deleteTypeById = (req, res, next) => {
   let _id = req.params.id;
   Type.deleteOne({ _id: _id }).then((err) => {
     if (err) {
-      return res.json({
-        error: false,
-        message: "Delete type successfully!",
-        data: [],
+      Note.deleteMany({ type: _id }).then((note) => {
+        return res.json({
+          error: false,
+          message: "Delete type successfully!",
+          data: [],
+        });
       });
     } else {
       return res.json({
@@ -134,7 +137,9 @@ exports.deleteTypeById = (req, res, next) => {
     }
   });
 };
+//#endregion
 
+//#region Note API
 // Create new Note
 exports.postAddNote = (req, res, next) => {
   const title = req.body.title;
@@ -156,11 +161,19 @@ exports.postAddNote = (req, res, next) => {
     }).then((result) => {
       Type.findByIdAndUpdate(typeId, { $push: { notes: result._id } })
         .then((result) => {
-          return res.json({
-            error: false,
-            message: "Create note successfully!",
-            data: [],
-          });
+          if (result) {
+            return res.json({
+              error: false,
+              message: "Create note successfully!",
+              data: [],
+            });
+          } else {
+            return res.json({
+              error: true,
+              message: "There was an error!",
+              data: [],
+            });
+          }
         })
         .catch((err) => {
           return res.json({ error: true, message: err, data: result });
@@ -237,22 +250,24 @@ exports.patchEditNoteById = (req, res, next) => {
       content: content,
       image: image,
       typeId: typeId,
-    }).then((result) => {
-      if (result) {
+    })
+      .then((result) => {
+        if (result) {
+          return res.json({
+            error: true,
+            message: error?.details[0]?.message,
+            data: [],
+          });
+        } else {
+        }
+      })
+      .catch((err) => {
         return res.json({
           error: true,
-          message: error?.details[0]?.message,
+          message: "There was a error!",
           data: [],
         });
-      } else {
-      }
-    }).catch(err=>{
-      return res.json({
-        error: true,
-        message: "There was a error!",
-        data: [],
       });
-    });
   } else {
     return res.json({
       error: true,
@@ -264,19 +279,26 @@ exports.patchEditNoteById = (req, res, next) => {
 // Delele Type
 exports.deleteNoteById = (req, res, next) => {
   let _id = req.params.id;
-  Note.findOneAndRemove({ _id: _id }).then((err) => {
-    if (err) {
+  Note.findOneAndRemove({ _id: _id })
+    .then((note) => {
+      Type.findOneAndUpdate({ notes: _id }).then((type) => {
+        for (let i = 0; i < type.notes.length; i++) {
+          type.notes[i].splice(i, 1);
+          type.notes = type.notes.filter((note) => note !== _id);
+        }
+      });
       return res.json({
         error: false,
         message: "Delete Note successfully!",
         data: [],
       });
-    } else {
+    })
+    .catch((err) => {
       return res.json({
         error: true,
         message: "There was a error!",
         data: [],
       });
-    }
-  });
+    });
 };
+//#endregion

@@ -9,4 +9,5 @@ const router = express.Router();
 router.get("/", homeController.getHome);
 router.get("/take-note", homeController.getTakeNote);
 
+
 module.exports = router;

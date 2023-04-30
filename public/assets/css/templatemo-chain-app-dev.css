@@ -2326,11 +2326,15 @@ responsive
   margin-bottom: 20px;
 }
 .gallery_product .note-content {
-  padding-left: 10px;
-  display: -webkit-box;
+  max-width: 350px;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  display: -webkit-box !important;
+  white-space: nowrap;
   -webkit-line-clamp: 9;
   -webkit-box-orient: vertical;
-  overflow: hidden;
+  white-space: normal;
+  word-break: break-all;
 }
 .gallery_product .note-ribbon {
   position: absolute;

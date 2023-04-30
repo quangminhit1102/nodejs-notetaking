@@ -20,7 +20,7 @@ exports.getLogin = (req, res, next) => {
     path: "/login",
     pageTitle: "Login",
     errorMessage: message,
-    successMessage:"",
+    successMessage: "",
   });
 };
 // Post Login
@@ -67,6 +67,7 @@ exports.getSignup = (req, res, next) => {
     path: "/register",
     pageTitle: "Signup",
     errorMessage: message,
+    successMessage: "",
   });
 };
 // Post Sign Up
@@ -131,6 +132,7 @@ exports.postForgotPass = (req, res, next) => {
     if (userDoc) {
       let token = shortid.generate();
       userDoc.resetPassword = token;
+      userDoc.resetPasswordExpire = new Date().
       userDoc.save();
       // Send Mail
       let html = `<h1>Please Follow this link to Reset Password.</h1><a href="${process.env.BASE_URL}/Reset-Password/${token}">Click Here To Fly.</a>`;
