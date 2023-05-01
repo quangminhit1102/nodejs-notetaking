@@ -237,7 +237,7 @@ exports.patchEditNoteById = (req, res, next) => {
   let { title } = req.body;
   let { content } = req.body;
   let { image } = req.body;
-  let { typeId } = req.body;
+  let typeId = req.body.noteType;
   let { error } = Note.Validate({
     title: title,
     content: content,
@@ -253,12 +253,34 @@ exports.patchEditNoteById = (req, res, next) => {
     })
       .then((result) => {
         if (result) {
+          Type.findOneAndUpdate({ notes: _id })
+            .then((type) => {
+              for (let i = 0; i < type.notes.length; i++) {
+                type.notes[i].splice(i, 1);
+                type.notes = type.notes.filter((note) => note !== _id);
+              }
+            })
+            .then(() => {
+              Type.findByIdAndUpdate(typeId, { $push: { notes: result._id } })
+                .then((result) => {
+                  if (result) {
+                  } else {
+                    return res.json({
+                      error: true,
+                      message: "There was an error!",
+                      data: [],
+                    });
+                  }
+                })
+                .catch((err) => {
+                  return res.json({ error: true, message: err, data: result });
+                });
+            });
           return res.json({
-            error: true,
-            message: error?.details[0]?.message,
+            error: false,
+            message: "Update note success!",
             data: [],
           });
-        } else {
         }
       })
       .catch((err) => {

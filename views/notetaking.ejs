@@ -1,4 +1,6 @@
 <%- include('./layout/header.ejs') %>
+<html>
+  <body>
     <div class="container" style="padding-top: 150px">
       <div class="container">
         <div class="row">
@@ -395,7 +397,7 @@
       <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLabel">New message</h5>
+            <h5 class="modal-title" id="exampleModalLabel">New Note</h5>
             <button
               type="button"
               class="btn-close"
@@ -463,7 +465,7 @@
       <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLabel">New message</h5>
+            <h5 class="modal-title" id="exampleModalLabel">New Type</h5>
             <button
               type="button"
               class="btn-close"
@@ -521,55 +523,6 @@
         </div>
       </div>
     </div>
-    <!-- Add Note -->
-    <div
-      class="modal fade"
-      id="editNoteModal"
-      tabindex="-1"
-      role="dialog"
-      aria-labelledby="editNoteModal"
-      aria-hidden="true"
-    >
-      <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLabel">Edit Note</h5>
-            <button
-              type="button"
-              class="btn-close"
-              aria-label="Close"
-              data-bs-dismiss="modal"
-            ></button>
-          </div>
-          <div class="modal-body">
-            <form>
-              <div class="form-group">
-                <label for="recipient-name" class="col-form-label"
-                  >Recipient:</label
-                >
-                <input type="text" class="form-control" id="recipient-name" />
-              </div>
-              <div class="form-group">
-                <label for="message-text" class="col-form-label"
-                  >Message:</label
-                >
-                <textarea class="form-control" id="message-text"></textarea>
-              </div>
-            </form>
-          </div>
-          <div class="modal-footer">
-            <button
-              type="button"
-              class="btn btn-secondary"
-              data-bs-dismiss="modal"
-            >
-              Close
-            </button>
-            <button type="button" class="btn btn-primary">Send message</button>
-          </div>
-        </div>
-      </div>
-    </div>
     <!-- Scripts -->
     <script src="vendor/jquery/jquery.min.js"></script>
     <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
@@ -623,6 +576,7 @@
                 let button = `<button class="btn btn-default border border-dark" title="${item.description}" style="background-color:${item.color};" data-filter="all">${item.title}</button>`;
                 $(".button-filter").append(button);
               });
+              $("#nodeType").find("option").not(":first").remove();
               data.forEach((item) => {
                 let option = `<option value="${item._id}">${item.title}</option>`;
                 $("#nodeType").append(option);
@@ -650,23 +604,184 @@
               if (data.length > 0) {
                 data.forEach((item) => {
                   console.log(item);
-                  let card = `<div class="gallery_product col-lg-4 col-md-4 col-sm-4 col-xs-6 filter hdpe" >
-            <div class="note-body p-4">
-              <div class="note-title">
-                ${item.title}
-              </div>
-              <span class="note-ribbon" style="background-color:${item?.type?.color}"></span>
-              <div class="note-content">
-                ${item.content}
+                  let card = `<div class="gallery_product col-lg-4 col-md-4 col-sm-4 col-xs-6 filter hdpe" data-bs-toggle='modal' data-bs-target='#editNoteModal-${item._id}' data-type="${item?.type?._id}" >
+              <div class="note-body p-4">
+                <div class="note-title">
+                  ${item.title}
+                </div>
+                <span class="note-ribbon" style="background-color:${item?.type?.color}"></span>
+                <div class="note-content">
+                  ${item.content}
+                </div>
               </div>
             </div>
-          </div>`;
+            <!-- Edit Note -->
+      <div
+        class="modal fade"
+        id="editNoteModal-${item._id}"
+        data-id="${item._id}"
+        tabindex="-1"
+        role="dialog"
+        aria-labelledby="editNoteModal"
+        aria-hidden="true"
+      >
+      <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Edit Note</h5>
+            <button
+              type="button"
+              class="btn-close"
+              aria-label="Close"
+              data-bs-dismiss="modal"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <form>
+              <div class="form-group">
+                <label for="Title" class="col-form-label">Title:</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="noteTitle"
+                  name="noteTitle"
+                  value="${item.title}"
+                />
+              </div>
+              <div class="form-group">
+                <label for="message-text" class="col-form-label"
+                  >Message:</label
+                >
+                <textarea
+                  class="form-control"
+                  id="noteContent"
+                  name="noteContent"
+                >${item.content}</textarea>
+              </div>
+              <div class="form-group">
+                <label for="message-text" class="col-form-label">Type:</label>
+                <select
+                  class="form-control nodeType-edit"
+                  id="nodeType-edit"
+                  aria-label="Default select example"
+                >
+                  <option selected value="0">Open this select menu</option>
+                </select>
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer justify-content-between">
+            <button type="button" class="btn btn-outline-danger align-left">
+              Delete Note
+            </button>
+            <div class="footer-end">
+              <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Close
+            </button>
+            <button type="button" class="btn btn-primary updateNoteBtn">
+              Update Note
+            </button>
+              </div>
+          </div>
+        </div>
+      </div>
+      </div>
+      <!-- End edit Note -->
+
+            `;
                   $(".note-list").append(card);
+                });
+                $(".gallery_product").each((index, item) => {
+                  let card = $(item);
+                  item.addEventListener("click", async function () {
+                    let select = $($(item).attr("data-bs-target")).find(
+                      "select"
+                    );
+                    $.ajax({
+                      url: "/type",
+                      method: "get",
+                      dataType: "json",
+                    }).then((response) => {
+                      let data = response.data;
+                      select.find("option").not(":first").remove();
+                      select.find("option:selected").remove();
+                      data.forEach((item) => {
+                        let option = "";
+                        if (item._id === card.attr("data-type")) {
+                          option = `<option selected value="${item._id}">${item.title}</option>`;
+                        } else {
+                          option = `<option value="${item._id}">${item.title}</option>`;
+                        }
+                        select.append(option);
+                      });
+                    });
+                  });
+                });
+
+                // Update note Button
+                $(".updateNoteBtn").each((index, item) => {
+                  $(item).on("click", function () {
+                    let modal = $(item).closest(".modal");
+                    let noteTitle = modal.find("#noteTitle").val();
+                    let noteContent = modal.find("#noteContent").val();
+                    // let image = $("#typeColor").val()
+                    let noteType = modal.find("#nodeType-edit").val();
+                    console.log(modal, noteTitle, noteContent, noteType);
+                    console.log(`/note/${modal.attr("data-id")}`);
+                    $.ajax({
+                      url: `/note/${modal.attr("data-id")}`,
+                      method: "patch",
+                      dataType: "json",
+                      data: {
+                        title: noteTitle,
+                        content: noteContent,
+                        image: "",
+                        noteType: noteType,
+                      },
+                      success: function (response) {
+                        console.log(response);
+                        if (!response.error) {
+                          myNotify = new Notify({
+                            status: "success",
+                            title: "Success",
+                            text: response.message,
+                            effect: "slide",
+                            type: 3,
+                            autoclose: true,
+                          });
+                          loadNote();
+                          modal.modal("hide");
+                          $("body").removeClass("modal-open");
+                          $(".modal-backdrop").remove();
+
+                          //load Color
+                          loadColor();
+                        } else {
+                          myNotify = new Notify({
+                            status: "error",
+                            title: "Error",
+                            text: response.message,
+                            effect: "slide",
+                            type: 3,
+                            autoclose: true,
+                          });
+                        }
+                      },
+                      error: function (response) {
+                        alert("server error");
+                      },
+                    });
+                  });
                 });
               } else {
                 let emptyNote = document.createElement("h3");
-                emptyNote.innerText = "You don't have any Note! Let's create Note!"
-                emptyNote.classList.add("text-center")
+                emptyNote.innerText =
+                  "You don't have any Note! Let's create Note!";
+                emptyNote.classList.add("text-center");
                 $(".note-list").append(emptyNote);
               }
             } else {
@@ -678,6 +793,8 @@
           },
         });
       };
+
+      // Document Ready
       $(document).ready(function () {
         loadType();
         loadNote();
@@ -725,10 +842,10 @@
         });
 
         $("#createNoteBtn").click((e) => {
-          let noteTitle = $("#noteTitle").val();
-          let noteContent = $("#noteContent").val();
+          let noteTitle = $("#addNoteModal #noteTitle").val();
+          let noteContent = $("#addNoteModal #noteContent").val();
           // let image = $("#typeColor").val()
-          let noteType = $("#nodeType").val();
+          let noteType = $("#addNoteModal #nodeType").val();
           $.ajax({
             url: "/note/add-new",
             method: "post",
