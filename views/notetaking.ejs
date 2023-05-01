@@ -671,7 +671,7 @@
             </form>
           </div>
           <div class="modal-footer justify-content-between">
-            <button type="button" class="btn btn-outline-danger align-left">
+            <button type="button" class="btn btn-outline-danger align-left deleteNoteBtn">
               Delete Note
             </button>
             <div class="footer-end">
@@ -742,6 +742,51 @@
                         image: "",
                         noteType: noteType,
                       },
+                      success: function (response) {
+                        console.log(response);
+                        if (!response.error) {
+                          myNotify = new Notify({
+                            status: "success",
+                            title: "Success",
+                            text: response.message,
+                            effect: "slide",
+                            type: 3,
+                            autoclose: true,
+                          });
+                          loadNote();
+                          modal.modal("hide");
+                          $("body").removeClass("modal-open");
+                          $(".modal-backdrop").remove();
+
+                          //load Color
+                          loadColor();
+                        } else {
+                          myNotify = new Notify({
+                            status: "error",
+                            title: "Error",
+                            text: response.message,
+                            effect: "slide",
+                            type: 3,
+                            autoclose: true,
+                          });
+                        }
+                      },
+                      error: function (response) {
+                        alert("server error");
+                      },
+                    });
+                  });
+                });
+
+                // Delete note
+                // Update note Button
+                $(".deleteNoteBtn").each((index, item) => {
+                  $(item).on("click", function () {
+                    let modal = $(item).closest(".modal");
+                    $.ajax({
+                      url: `/note/${modal.attr("data-id")}`,
+                      method: "delete",
+                      dataType: "json",
                       success: function (response) {
                         console.log(response);
                         if (!response.error) {

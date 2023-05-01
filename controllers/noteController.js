@@ -232,7 +232,7 @@ exports.getNoteById = (req, res, next) => {
     });
 };
 //Edit Note by Id
-exports.patchEditNoteById = (req, res, next) => {
+exports.patchEditNoteById = function (req, res, next) {
   let _id = req.params.id;
   let { title } = req.body;
   let { content } = req.body;
@@ -245,42 +245,36 @@ exports.patchEditNoteById = (req, res, next) => {
     typeId: typeId,
   });
   if (error == null) {
+    Type.findOneAndUpdate({ notes: _id }, { $pull: { notes: _id } }).then(
+      (type) => {}
+    );
     Note.findByIdAndUpdate(_id, {
       title: title,
       content: content,
       image: image,
-      typeId: typeId,
+      type: typeId,
     })
       .then((result) => {
         if (result) {
-          Type.findOneAndUpdate({ notes: _id })
-            .then((type) => {
-              for (let i = 0; i < type.notes.length; i++) {
-                type.notes[i].splice(i, 1);
-                type.notes = type.notes.filter((note) => note !== _id);
+          Type.findByIdAndUpdate(typeId, { $push: { notes: result._id } })
+            .then((result) => {
+              if (result) {
+                return res.json({
+                  error: false,
+                  message: "Update note success!",
+                  data: [],
+                });
+              } else {
+                return res.json({
+                  error: true,
+                  message: "There was an error!",
+                  data: [],
+                });
               }
             })
-            .then(() => {
-              Type.findByIdAndUpdate(typeId, { $push: { notes: result._id } })
-                .then((result) => {
-                  if (result) {
-                  } else {
-                    return res.json({
-                      error: true,
-                      message: "There was an error!",
-                      data: [],
-                    });
-                  }
-                })
-                .catch((err) => {
-                  return res.json({ error: true, message: err, data: result });
-                });
+            .catch((err) => {
+              return res.json({ error: true, message: err, data: result });
             });
-          return res.json({
-            error: false,
-            message: "Update note success!",
-            data: [],
-          });
         }
       })
       .catch((err) => {
@@ -303,12 +297,12 @@ exports.deleteNoteById = (req, res, next) => {
   let _id = req.params.id;
   Note.findOneAndRemove({ _id: _id })
     .then((note) => {
-      Type.findOneAndUpdate({ notes: _id }).then((type) => {
-        for (let i = 0; i < type.notes.length; i++) {
-          type.notes[i].splice(i, 1);
-          type.notes = type.notes.filter((note) => note !== _id);
-        }
-      });
+      Type.findOneAndUpdate({ notes: _id }, { $pull: { notes: _id } })
+        .then((type) => {})
+        .catch((err) => {
+          console.log(err);
+        });
+
       return res.json({
         error: false,
         message: "Delete Note successfully!",
