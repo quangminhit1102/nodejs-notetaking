@@ -1,11 +1,12 @@
 ## Module Note
 
-NodeMon -> Auto Restart server
-Express -> Nodejs Library
-Mongoose -> MongoDB Database
-DotENV -> loads environment variables from a .env file into process.env
-EJS -> Template Engine ExpressJs
-| First Header | Second Header |
-| ------------- | ------------- |
-| Content Cell | Content Cell |
-| Content Cell | Content Cell |
+| Module     | Usage                                                         |
+| ---------- | ------------------------------------------------------------- |
+| NodeMon    | Auto Restart server                                           |
+| Express    | MongoDB Database library                                      |
+| DotENV     | loads environment variables from a .env file into process.env |
+| EJS        | Template Engine ExpressJs                                     |
+| JOI        | Json Body validation library                                  |
+| Notemailer | Send Mail Libary for NodeJS                                   |
+
+## Author  NguyenQuangMinh |NGUISM|
