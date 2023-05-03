@@ -4,7 +4,26 @@ const mail = require("../util/sendMail");
 const { json } = require("express");
 const shortid = require("shortid");
 require("dotenv").config(); // .Env config
+const jwt = require("jsonwebtoken");
 
+exports.authenticate = async (req, res, next) => {
+  const authHeader = req.headers.authorization;
+  if (!authHeader) {
+    return res.status(401).json({ message: "Missing authorization header" });
+  }
+  const token = authHeader.split(" ")[1];
+  try {
+    const decodedToken = jwt.verify(token, process.env.JWT_SECRET_KEY);
+    const user = await User.findById(decodedToken.id);
+    if (!user) {
+      return res.status(401).json({ message: "Invalid token" });
+    }
+    req.user = user;
+    next();
+  } catch (err) {
+    return res.status(401).json({ message: "Invalid token" });
+  }
+};
 //Get Sign In
 exports.getLogin = (req, res, next) => {
   let errorMessage = req.flash("error")?.[0];
@@ -35,6 +54,17 @@ exports.postLogin = (req, res, next) => {
           if (doMatch) {
             req.session.isLoggedIn = true;
             req.session.user = user;
+            // Generate a JWT token
+            const token = jwt.sign(
+              { id: user._id },
+              process.env.JWT_SECRET_KEY,
+              {
+                expiresIn: "7d",
+              }
+            );
+            user.token = token;
+            user.save().then();
+            console.log(token);
             return req.session.save((err) => {
               console.log(err);
               res.redirect("/");
