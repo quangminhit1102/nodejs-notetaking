@@ -20,7 +20,7 @@ const noteSchema = new Schema({
     type: String,
     default: shortid.generate,
   },
-  user: {},
+  user: { type: String, ref: "User" },
   type: {
     type: String,
     ref: "Type",
@@ -38,11 +38,10 @@ const Validate = function (obj) {
       .max(500)
       .label("Content"),
     image: Joi.string().allow(""),
-    typeId: Joi.string()
-      .when("_id", { is: null, then: Joi.required() })
+    typeId: Joi.string().when("_id", { is: null, then: Joi.required() }),
+    user: Joi.string().when("_id", { is: null, then: Joi.required() }),
   });
   return noteValidateSchema.validate(obj);
 };
 module.exports = mongoose.model("Note", noteSchema);
 module.exports.Validate = Validate;
-

@@ -18,5 +18,13 @@ const userSchema = new Schema({
   },
   resetPassword: String,
   resetPasswordExpire: String,
+  types: [
+    {
+      type: String,
+      ref: "Type",
+    },
+  ],
+  notes: [{ type: String, ref: "Note" }],
+  token: { type: String },
 });
 module.exports = mongoose.model("User", userSchema);

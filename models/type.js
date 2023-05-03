@@ -27,6 +27,10 @@ const typeSchema = new Schema({
       ref: "Note",
     },
   ],
+  user: {
+    type: String,
+    ref: "User",
+  },
 });
 const Validate = function (obj) {
   const typeValidateSchema = Joi.object({
@@ -43,6 +47,7 @@ const Validate = function (obj) {
       .max(50)
       .label("Description"),
     color: Joi.string().when("_id", { is: null, then: Joi.required() }),
+    user: Joi.string().when("_id", { is: null, then: Joi.required() }),
   });
   return typeValidateSchema.validate(obj);
 };
