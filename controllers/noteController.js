@@ -198,6 +198,7 @@ exports.postAddNote = (req, res, next) => {
     user: user._id,
   });
   if (error == null) {
+    let newNote = "";
     Note.create({
       title: title,
       content: content,
@@ -205,6 +206,7 @@ exports.postAddNote = (req, res, next) => {
       type: typeId,
       user: user._id,
     }).then((result) => {
+      newNote = result;
       Type.findByIdAndUpdate(typeId, { $push: { notes: result._id } })
         .then((type) => {
           if (type) {
@@ -214,7 +216,7 @@ exports.postAddNote = (req, res, next) => {
               return res.json({
                 error: false,
                 message: "Create note successfully!",
-                data: result,
+                data: newNote,
               });
             });
           } else {
@@ -297,44 +299,56 @@ exports.patchEditNoteById = async function (req, res, next) {
     typeId: typeId,
   });
   if (error == null) {
-    let updateTypeNote = await Type.findOneAndUpdate(
-      { notes: _id, user: user._id },
-      { $pull: { notes: _id } }
-    );
-    if (!updateTypeNote) {
+    let note = await Note.find({ _id: _id, user: user._id });
+    if (note != null) {
+      let test = note[0];
+      console.log(test);
+      if (note[0].type != typeId) {
+        let type = await Type.findOneAndUpdate(
+          { _id: note[0].type },
+          { $pull: { notes: _id } }
+        );
+        let newType = await Type.findOneAndUpdate(
+          { _id: typeId },
+          { $addToSet: { notes: _id } }
+        );
+        if (newType == null) {
+          return res.json({
+            error: true,
+            message: "Type not found!",
+            data: [],
+          });
+        }
+      }
+      note.title = title;
+      note.title = title;
+      note.content = content;
+      note.image = image;
+      note.type = typeId;
+      let newNote = await Note.findByIdAndUpdate(
+        _id,
+        {
+          title: title,
+          content: content,
+          image: image,
+          type: typeId,
+        },
+        { new: true }
+      );
+      if (newNote != null) {
+        return res.json({
+          error: true,
+          message: "Update note success!",
+          data: newNote,
+        });
+      }
+    } else {
       return res.json({
         error: true,
-        message: "Type note found!",
+        message: "Note not found!",
         data: [],
       });
     }
-    let updateNote = await Note.findByIdAndUpdate(
-      _id,
-      {
-        title: title,
-        content: content,
-        image: image,
-        type: typeId,
-      },
-      { new: true }
-    );
-    if (typeId) {
-      let updateNewTypeNote = Type.findByIdAndUpdate(typeId, {
-        $push: { notes: updateNote._id },
-      });
-      if (!updateNewTypeNote) {
-        return res.json({
-          error: true,
-          message: "Type note found!",
-          data: [],
-        });
-      }
-    }
-    return res.json({
-      error: false,
-      message: "Update note success!",
-      data: note,
-    });
   } else {
     return res.json({
       error: true,
@@ -346,6 +360,7 @@ exports.patchEditNoteById = async function (req, res, next) {
 // Delele Type
 exports.deleteNoteById = (req, res, next) => {
   let _id = req.params.id;
+  let user = req?.user;
   Note.findOneAndRemove({ _id: _id })
     .then((note) => {
       Type.findOneAndUpdate({ notes: _id }, { $pull: { notes: _id } })
@@ -353,7 +368,11 @@ exports.deleteNoteById = (req, res, next) => {
         .catch((err) => {
           console.log(err);
         });
-
+      User.findOneAndUpdate({ _id: user._id }, { $pull: { notes: _id } })
+        .then((type) => {})
+        .catch((err) => {
+          console.log(err);
+        });
       return res.json({
         error: false,
         message: "Delete Note successfully!",
