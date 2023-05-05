@@ -337,7 +337,7 @@ exports.patchEditNoteById = async function (req, res, next) {
       );
       if (newNote != null) {
         return res.json({
-          error: true,
+          error: false,
           message: "Update note success!",
           data: newNote,
         });

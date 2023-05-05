@@ -534,6 +534,21 @@
     <script src="assets/js/custom.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/simple-notify@0.5.5/dist/simple-notify.min.js"></script>
     <script>
+      function getCookie(cname) {
+        let name = cname + "=";
+        let decodedCookie = decodeURIComponent(document.cookie);
+        let ca = decodedCookie.split(";");
+        for (let i = 0; i < ca.length; i++) {
+          let c = ca[i];
+          while (c.charAt(0) == " ") {
+            c = c.substring(1);
+          }
+          if (c.indexOf(name) == 0) {
+            return c.substring(name.length, c.length);
+          }
+        }
+        return "";
+      }
       $("textarea")
         .each(function () {
           this.setAttribute(
@@ -565,6 +580,7 @@
           url: "/type",
           method: "get",
           dataType: "json",
+          headers: { Authorization: "Bearer " + getCookie("TOKEN") },
           success: function (response) {
             if (!response.error) {
               // console.log(response.data);
@@ -596,6 +612,7 @@
           url: "/note",
           method: "get",
           dataType: "json",
+          headers: { Authorization: "Bearer " + getCookie("TOKEN") },
           success: function (response) {
             if (!response.error) {
               loadColor();
@@ -705,6 +722,7 @@
                       url: "/type",
                       method: "get",
                       dataType: "json",
+                      headers: { Authorization: "Bearer " + getCookie("TOKEN") },
                     }).then((response) => {
                       let data = response.data;
                       select.find("option").not(":first").remove();
@@ -736,6 +754,7 @@
                       url: `/note/${modal.attr("data-id")}`,
                       method: "patch",
                       dataType: "json",
+                      headers: { Authorization: "Bearer " + getCookie("TOKEN") },
                       data: {
                         title: noteTitle,
                         content: noteContent,
@@ -787,6 +806,7 @@
                       url: `/note/${modal.attr("data-id")}`,
                       method: "delete",
                       dataType: "json",
+                      headers: { Authorization: "Bearer " + getCookie("TOKEN") },
                       success: function (response) {
                         console.log(response);
                         if (!response.error) {
@@ -851,6 +871,7 @@
             url: "/type/add-new",
             method: "post",
             dataType: "json",
+            headers: { Authorization: "Bearer " + getCookie("TOKEN") },
             data: {
               title: typeTitle,
               description: typeDescription,
@@ -895,6 +916,7 @@
             url: "/note/add-new",
             method: "post",
             dataType: "json",
+            headers: { Authorization: "Bearer " + getCookie("TOKEN") },
             data: {
               title: noteTitle,
               content: noteContent,

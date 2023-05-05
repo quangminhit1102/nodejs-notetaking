@@ -5,6 +5,7 @@ const { json } = require("express");
 const shortid = require("shortid");
 require("dotenv").config(); // .Env config
 const jwt = require("jsonwebtoken");
+const { Cookie } = require("express-session");
 
 exports.authenticate = async (req, res, next) => {
   const authHeader = req.headers.authorization;
@@ -67,6 +68,9 @@ exports.postLogin = (req, res, next) => {
             console.log(token);
             return req.session.save((err) => {
               console.log(err);
+              res.cookie("TOKEN", token, {
+                maxAge: 604800,
+              });
               res.redirect("/");
             });
           }
@@ -137,6 +141,7 @@ exports.postSignup = (req, res, next) => {
 exports.getLogout = (req, res, next) => {
   req.session.destroy((err) => {
     console.log(err);
+    res.clearCookie("TOKEN");
     res.redirect("/login");
   });
 };
