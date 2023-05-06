@@ -388,3 +388,11 @@ exports.deleteNoteById = (req, res, next) => {
     });
 };
 //#endregion
+
+exports.getNoteType = (req, res, next) => {
+  if (req?.session?.user) {
+    res.render("../views/notetype.ejs", { user: req.session.user });
+  } else {
+    res.redirect("/login");
+  }
+};

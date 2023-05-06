@@ -4,34 +4,38 @@ const Joi = require("joi");
 
 const Schema = mongoose.Schema;
 
-const typeSchema = new Schema({
-  title: {
-    type: String,
-    required: true,
-  },
-  description: {
-    type: String,
-    required: true,
-  },
-  color: {
-    type: String,
-    default: "#fff",
-  },
-  _id: {
-    type: String,
-    default: shortid.generate,
-  },
-  notes: [
-    {
+const typeSchema = new Schema(
+  {
+    title: {
       type: String,
-      ref: "Note",
+      required: true,
     },
-  ],
-  user: {
-    type: String,
-    ref: "User",
+    description: {
+      type: String,
+      required: true,
+    },
+    color: {
+      type: String,
+      default: "#fff",
+    },
+    _id: {
+      type: String,
+      default: shortid.generate,
+    },
+    notes: [
+      {
+        type: String,
+        ref: "Note",
+      },
+    ],
+    user: {
+      type: String,
+      ref: "User",
+    },
   },
-});
+  { timestamps: true } // set CreateTime, UpdateTime
+);
+// Validation For Note Model
 const Validate = function (obj) {
   const typeValidateSchema = Joi.object({
     _id: Joi.string(),
