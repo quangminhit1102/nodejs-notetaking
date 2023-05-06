@@ -195,87 +195,19 @@
         </div>
       </div>
     </footer>
-    <!-- Add Note -->
-    <div
-      class="modal fade"
-      id="addNoteModal"
-      tabindex="-1"
-      role="dialog"
-      aria-labelledby="addNoteModal"
-      aria-hidden="true"
-    >
-      <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLabel">New Note</h5>
-            <button
-              type="button"
-              class="btn-close"
-              aria-label="Close"
-              data-bs-dismiss="modal"
-            ></button>
-          </div>
-          <div class="modal-body">
-            <form>
-              <div class="form-group">
-                <label for="Title" class="col-form-label">Title:</label>
-                <input
-                  type="text"
-                  class="form-control"
-                  id="noteTitle"
-                  name="noteTitle"
-                />
-              </div>
-              <div class="form-group">
-                <label for="message-text" class="col-form-label"
-                  >Message:</label
-                >
-                <textarea
-                  class="form-control"
-                  id="noteContent"
-                  name="noteContent"
-                ></textarea>
-              </div>
-              <div class="form-group">
-                <label for="message-text" class="col-form-label">Type:</label>
-                <select
-                  class="form-control"
-                  id="nodeType"
-                  aria-label="Default select example"
-                >
-                  <option selected value="0">Open this select menu</option>
-                </select>
-              </div>
-            </form>
-          </div>
-          <div class="modal-footer">
-            <button
-              type="button"
-              class="btn btn-secondary"
-              data-bs-dismiss="modal"
-            >
-              Close
-            </button>
-            <button type="button" id="createNoteBtn" class="btn btn-primary">
-              Create Note
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
     <!-- Add Type -->
-    <div
+    <!-- <div
       class="modal fade"
-      id="addTypeModal"
+      id="editTypeModal"
       tabindex="-1"
       role="dialog"
-      aria-labelledby="addTypeModal"
+      aria-labelledby="editTypeModal"
       aria-hidden="true"
     >
       <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLabel">New Type</h5>
+            <h5 class="modal-title" id="exampleModalLabel">Edit Type</h5>
             <button
               type="button"
               class="btn-close"
@@ -327,12 +259,12 @@
               Close
             </button>
             <button type="button" id="createTypeBtn" class="btn btn-primary">
-              Create New Type
+              Update Type
             </button>
           </div>
         </div>
       </div>
-    </div>
+    </div> -->
     <!-- Delete Confirm -->
     <div class="modal fade delete-confirm" tabindex="-1" role="dialog">
       <div class="modal-dialog modal-dialog-centered" role="document">
@@ -348,7 +280,7 @@
           </div>
           <div class="modal-body">
             <p>
-              All Note belong to this typw will be deleted? Delete this type?
+              All Note belong to this type will be deleted? Delete this type?
             </p>
           </div>
           <div class="modal-footer">
@@ -361,6 +293,7 @@
             </button>
             <button
               type="button"
+              id="deleteType"
               class="btn btn-danger"
               style="background-color: red !important"
             >
@@ -434,9 +367,9 @@
               console.log(response.data);
               let data = response.data;
               $(".type-task-table tbody").html("");
-              if (data.length < 0) {
+              if (data.length == 0) {
                 $(".type-task-table tbody").append(
-                  "<td>You have no Type! Let's create new Type</td>"
+                  `<tr><td class="text-center" colspan="5">You have no Type! Let's create new Type</td></tr>`
                 );
               }
               data.forEach((item, index) => {
@@ -465,13 +398,88 @@
                   <i class="fas fa-trash fa-fw delete-type-button" title="Delete Type" data-id="${item._id}"></i>
                 </div>
               </td>
-            </tr>`;
+            </tr>
+            <div
+              class="modal fade"
+              id="editTypeModal"
+              tabindex="-1"
+              role="dialog"
+              aria-labelledby="editTypeModal"
+              aria-hidden="true"
+            >
+              <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Edit Type</h5>
+                    <button
+                      type="button"
+                      class="btn-close"
+                      aria-label="Close"
+                      data-bs-dismiss="modal"
+                    ></button>
+                  </div>
+                  <div class="modal-body">
+                    <form>
+                      <div class="form-group">
+                        <label for="type" class="col-form-label">Title (*):</label>
+                        <input
+                          type="text"
+                          class="form-control"
+                          id="typeTitle"
+                          name="type"
+                        />
+                      </div>
+                      <div class="form-group">
+                        <label for="type" class="col-form-label"
+                          >Description (*):</label
+                        >
+                        <input
+                          type="text"
+                          class="form-control"
+                          id="typeDescription"
+                          name="type"
+                        />
+                      </div>
+                      <div class="form-group">
+                        <label for="message-text" class="col-form-label"
+                          >Pick a Color:</label
+                        >
+                        <input
+                          type="color"
+                          class="form-control p-0"
+                          id="typeColor"
+                          value="#ffffff"
+                        />
+                      </div>
+                    </form>
+                  </div>
+                  <div class="modal-footer">
+                    <button
+                      type="button"
+                      class="btn btn-secondary"
+                      data-bs-dismiss="modal"
+                    >
+                      Close
+                    </button>
+                    <button type="button" id="createTypeBtn" class="btn btn-primary">
+                      Update Type
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            `;
                 $(".type-task-table tbody").append(row);
               });
 
               $(".delete-type-button").each((index, item) => {
                 $(item).on("click", (e) => {
                   $(".delete-confirm").modal("show");
+                  // console.log($(e.target).attr("data-id"));
+                  $(".delete-confirm").attr(
+                    "data-id",
+                    $(e.target).attr("data-id")
+                  );
                 });
               });
             } else {
@@ -487,6 +495,45 @@
       // Document Ready
       $(document).ready(function () {
         loadType();
+        $(".delete-confirm #deleteType").on("click", (e) => {
+          // console.log($(e.target).closest(".modal").attr("data-id"));
+          let typeId = $(e.target).closest(".modal").attr("data-id");
+          if (typeId && typeId != "") {
+            $.ajax({
+              url: `/type/${typeId}`,
+              method: "delete",
+              dataType: "json",
+              headers: { Authorization: "Bearer " + getCookie("TOKEN") },
+              success: function (response) {
+                if (!response.error) {
+                  myNotify = new Notify({
+                    status: "success",
+                    title: "Success",
+                    text: response.message,
+                    effect: "slide",
+                    type: 3,
+                    autoclose: true,
+                  });
+                  $(e.target).closest(".modal").attr("data-id", "");
+                  $(".delete-confirm").modal("hide");
+                  loadType();
+                } else {
+                  myNotify = new Notify({
+                    status: "error",
+                    title: "Error",
+                    text: response.message,
+                    effect: "slide",
+                    type: 3,
+                    autoclose: true,
+                  });
+                }
+              },
+              error: function (response) {
+                alert("server error");
+              },
+            });
+          }
+        });
       });
     </script>
   </body>

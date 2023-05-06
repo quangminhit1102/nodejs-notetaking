@@ -718,6 +718,22 @@ header
   color: #4b8ef1;
 }
 
+.table-area {
+  padding-top: 150px;
+  display: flex;
+  flex-direction: column;
+  padding-left: 100px;
+  padding-right: 100px;
+  justify-content: center;
+}
+.type-task-table i {
+  color: #0d6efd;
+  cursor: pointer;
+}
+.type-task-table i:hover {
+  color: black;
+}
+
 @media (max-width: 1200px) {
   .header-area .main-nav .nav li {
     padding-left: 12px;
@@ -739,6 +755,9 @@ header
   }
   .background-header .nav li a.active:after {
     display: none;
+  }
+  .table-area {
+    padding-top: 200px;
   }
 }
 
@@ -2355,20 +2374,4 @@ responsive
 .button-filter button {
   margin-right: 5px;
   margin-top: 10px;
-}
-
-.table-area {
-  padding-top: 150px;
-  display: flex;
-  flex-direction: column;
-  padding-left: 100px;
-  padding-right: 100px;
-  justify-content: center;
-}
-.type-task-table i {
-  color: #0d6efd;
-  cursor: pointer;
-}
-.type-task-table i:hover {
-  color: black;
 }
