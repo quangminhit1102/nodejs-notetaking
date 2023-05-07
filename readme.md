@@ -9,5 +9,11 @@
 | EJS        | Template Engine ExpressJs                                     |
 | JOI        | Json Body validation library                                  |
 | Notemailer | Send Mail Libary for NodeJS                                   |
+| JOI        | Json Object Validation                                        |
+| connect-mongo-session        | Login Session Management                    |
+|jsonwebtoken| JWT authentication|
+|bcryptjs|Encryption Package|
+|shortid|Auto-generate Id|
+|body-parser|Body resquest parser|
 
 ## Author NguyenQuangMinh |NGUISM|
