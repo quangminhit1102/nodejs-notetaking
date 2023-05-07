@@ -8,6 +8,7 @@ const router = express.Router();
 
 //Type API
 router.get("/type", authController.authenticate, noteController.getAllType);
+router.get("/type-pagination", authController.authenticate, noteController.getTypePagination);
 router.get(
   "/type/:id",
   authController.authenticate,

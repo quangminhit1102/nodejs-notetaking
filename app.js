@@ -35,6 +35,7 @@ app.use(
     resave: false,
     saveUninitialized: false,
     store: store,
+    maxAge:"7d",
   })
 );
 app.use(flash());

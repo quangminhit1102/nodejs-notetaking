@@ -10,6 +10,7 @@
               <th scope="col">#</th>
               <th scope="col">Type Name</th>
               <th scope="col">Description</th>
+              <th scope="col">Color</th>
               <th scope="col">Create At</th>
               <th scope="col">Task</th>
             </tr>
@@ -66,15 +67,7 @@
           </tbody>
         </table>
         <nav aria-label="Page navigation ">
-          <ul class="pagination justify-content-end">
-            <li class="page-item">
-              <a class="page-link" href="#">Previous</a>
-            </li>
-            <li class="page-item"><a class="page-link" href="#">1</a></li>
-            <li class="page-item"><a class="page-link" href="#">2</a></li>
-            <li class="page-item"><a class="page-link" href="#">3</a></li>
-            <li class="page-item"><a class="page-link" href="#">Next</a></li>
-          </ul>
+          <ul class="pagination justify-content-end"></ul>
         </nav>
       </div>
     </div>
@@ -355,10 +348,10 @@
           item.nextElementSibling.style.color = `rgb(${ir},${ig},${ib})`;
         });
       };
-      const loadType = async function () {
+      const loadType = async function (page = 1) {
         $(".button-filter").html("");
         $.ajax({
-          url: "/type",
+          url: "/type-pagination/?page=" + page,
           method: "get",
           dataType: "json",
           headers: { Authorization: "Bearer " + getCookie("TOKEN") },
@@ -367,12 +360,12 @@
               console.log(response.data);
               let data = response.data;
               $(".type-task-table tbody").html("");
-              if (data.length == 0) {
+              if (data.data.length == 0) {
                 $(".type-task-table tbody").append(
-                  `<tr><td class="text-center" colspan="5">You have no Type! Let's create new Type</td></tr>`
+                  `<tr><td class="text-center" colspan="6">You have no Type! Let's create new Type</td></tr>`
                 );
               }
-              data.forEach((item, index) => {
+              data.data.forEach((item, index) => {
                 if (item.createdAt == undefined) {
                   item.createdAt = "N/A";
                 } else {
@@ -384,92 +377,142 @@
                   );
                 }
                 let row = `<tr>
-              <th scope="row">${index}</th>
-              <td>${item.title}</td>
-              <td>${item.description}</td>
-              <td>${item.createdAt}</td>
-              <td>
-                <div class="task-note">
-                  <i
-                    class="fas fa-pencil-alt fa-fw mr-4 update-type-button"
-                    style="margin-right: 15px"
-                    title="Edit Type" data-id="${item._id}"
-                  ></i>
-                  <i class="fas fa-trash fa-fw delete-type-button" title="Delete Type" data-id="${item._id}"></i>
-                </div>
-              </td>
-            </tr>
-            <div
-              class="modal fade"
-              id="editTypeModal"
-              tabindex="-1"
-              role="dialog"
-              aria-labelledby="editTypeModal"
-              aria-hidden="true"
-            >
-              <div class="modal-dialog modal-dialog-centered" role="document">
-                <div class="modal-content">
-                  <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Edit Type</h5>
-                    <button
-                      type="button"
-                      class="btn-close"
-                      aria-label="Close"
-                      data-bs-dismiss="modal"
-                    ></button>
-                  </div>
-                  <div class="modal-body">
-                    <form>
-                      <div class="form-group">
-                        <label for="type" class="col-form-label">Title (*):</label>
-                        <input
-                          type="text"
-                          class="form-control"
-                          id="typeTitle"
-                          name="type"
-                        />
+                    <th scope="row">${index}</th>
+                    <td>${item.title}</td>
+                    <td>${item.description}</td>
+                    <td>${item.createdAt}</td>
+                    <td class="d-flex flex-row align-items-center">${item.color}<div style="width:20px;height:20px;margin-left:5px;background-color:${item.color};"></div></td>
+                    <td>
+                      <div class="task-note">
+                        <i
+                          class="fas fa-pencil-alt fa-fw mr-4 update-type-button"
+                          style="margin-right: 15px"
+                          title="Edit Type" data-id="${item._id}"
+                          data-bs-toggle="modal"
+                          data-bs-target="#editTypeModal-${item._id}"
+                        ></i>
+                        <i class="fas fa-trash fa-fw delete-type-button" title="Delete Type" data-id="${item._id}"></i>
                       </div>
-                      <div class="form-group">
-                        <label for="type" class="col-form-label"
-                          >Description (*):</label
-                        >
-                        <input
-                          type="text"
-                          class="form-control"
-                          id="typeDescription"
-                          name="type"
-                        />
-                      </div>
-                      <div class="form-group">
-                        <label for="message-text" class="col-form-label"
-                          >Pick a Color:</label
-                        >
-                        <input
-                          type="color"
-                          class="form-control p-0"
-                          id="typeColor"
-                          value="#ffffff"
-                        />
-                      </div>
-                    </form>
-                  </div>
-                  <div class="modal-footer">
-                    <button
-                      type="button"
-                      class="btn btn-secondary"
-                      data-bs-dismiss="modal"
-                    >
-                      Close
-                    </button>
-                    <button type="button" id="createTypeBtn" class="btn btn-primary">
-                      Update Type
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
-            `;
+                    </td>
+                  </tr>
+                  `;
                 $(".type-task-table tbody").append(row);
+                $("body").append(`<div
+                    class="modal fade"
+                    id="editTypeModal-${item._id}"
+                    tabindex="-1"
+                    role="dialog"
+                    aria-labelledby="editTypeModal"
+                    aria-hidden="true"
+                    data-id="${item._id}"
+                  >
+                    <div class="modal-dialog modal-dialog-centered" role="document">
+                      <div class="modal-content">
+                        <div class="modal-header">
+                          <h5 class="modal-title" id="exampleModalLabel">Edit Type</h5>
+                          <button
+                            type="button"
+                            class="btn-close"
+                            aria-label="Close"
+                            data-bs-dismiss="modal"
+                          ></button>
+                        </div>
+                        <div class="modal-body">
+                          <form>
+                            <div class="form-group">
+                              <label for="type" class="col-form-label">Title (*):</label>
+                              <input
+                                type="text"
+                                class="form-control"
+                                id="typeTitle-${item._id}"
+                                name="type" value="${item.title}"
+                              />
+                            </div>
+                            <div class="form-group">
+                              <label for="type" class="col-form-label"
+                                >Description (*):</label
+                              >
+                              <input
+                                type="text"
+                                class="form-control"
+                                id="typeDescription-${item._id}"
+                                name="type"
+                                value="${item.description}"
+                              />
+                            </div>
+                            <div class="form-group">
+                              <label for="message-text" class="col-form-label"
+                                >Pick a Color:</label
+                              >
+                              <input
+                                type="color"
+                                class="form-control p-0"
+                                id="typeColor-${item._id}"
+                                value="${item.color}"
+                              />
+                            </div>
+                          </form>
+                        </div>
+                        <div class="modal-footer">
+                          <button
+                            type="button"
+                            class="btn btn-secondary"
+                            data-bs-dismiss="modal"
+                          >
+                            Close
+                          </button>
+                          <button type="button" class="btn btn-primary editTypeButton">
+                            Update Type
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>`);
+              });
+
+              //Add paging :) its hot 40oC
+              $(".pagination").html("");
+              $(".pagination")
+                .append(` <li class="page-item" id="previous" data-id="-1">
+                            <a class="page-link" href="#">Previous</a>
+                          </li>
+                          `);
+              for (let i = 1; i <= data.totalPage; i++) {
+                let isActive = "";
+                if (i == data.currentPage) {
+                  isActive = "active";
+                }
+                let pageLink = `<li class="page-item ${isActive}" data-id="${i}"><a class="page-link">${i}</a></li>`;
+                $(".pagination").append(pageLink);
+              }
+              $(".pagination")
+                .append(`<li class="page-item" id="next" data-id="+1">
+                            <a class="page-link" href="#" >Next</a>
+                          </li>`);
+              $(".page-item").each((index, item) => {
+                $(item).on("click", (e) => {
+                  console.log(
+                    $(e.target)[0].parentElement.getAttribute("data-id")
+                  );
+                  let temp = $(e.target)[0].parentElement.getAttribute(
+                    "data-id"
+                  );
+                  switch (temp) {
+                    case "-1":
+                      loadType(parseInt(data.currentPage) - 1);
+                      break;
+                    case "+1":
+                      if (data.currentPage < data.totalPage) {
+                        loadType(parseInt(data.currentPage) + 1);
+                      } else {
+                        loadType(data.totalPage);
+                      }
+                      break;
+                    default:
+                      loadType(temp);
+                      break;
+                  }
+                });
               });
 
               $(".delete-type-button").each((index, item) => {
@@ -482,6 +525,57 @@
                   );
                 });
               });
+
+              $(".editTypeButton")
+                .off("click")
+                .on("click", (e) => {
+                  let modal = $(e.target).closest(".modal");
+                  let typeId = modal.attr("data-id");
+                  let typeTitle = modal.find(`#typeTitle-${typeId}`).val();
+                  let typeDescription = modal
+                    .find(`#typeDescription-${typeId}`)
+                    .val();
+                  let typeColor = modal.find(`#typeColor-${typeId}`).val();
+                  console.log(typeId, typeTitle, typeDescription, typeColor);
+
+                  $.ajax({
+                    url: `/type/${typeId}`,
+                    method: "patch",
+                    dataType: "json",
+                    headers: { Authorization: "Bearer " + getCookie("TOKEN") },
+                    data: {
+                      title: typeTitle,
+                      description: typeDescription,
+                      color: typeColor,
+                    },
+                    success: function (response) {
+                      console.log(response);
+                      if (!response.error) {
+                        myNotify = new Notify({
+                          status: "success",
+                          title: "Success",
+                          text: response.message,
+                          effect: "slide",
+                          type: 3,
+                          autoclose: true,
+                        });
+                        loadType(data.currentPage);
+                      } else {
+                        myNotify = new Notify({
+                          status: "error",
+                          title: "Error",
+                          text: response.message,
+                          effect: "slide",
+                          type: 3,
+                          autoclose: true,
+                        });
+                      }
+                    },
+                    error: function (response) {
+                      alert("server error");
+                    },
+                  });
+                });
             } else {
               alert("Error");
             }

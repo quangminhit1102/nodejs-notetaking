@@ -722,7 +722,9 @@
                       url: "/type",
                       method: "get",
                       dataType: "json",
-                      headers: { Authorization: "Bearer " + getCookie("TOKEN") },
+                      headers: {
+                        Authorization: "Bearer " + getCookie("TOKEN"),
+                      },
                     }).then((response) => {
                       let data = response.data;
                       select.find("option").not(":first").remove();
@@ -754,7 +756,9 @@
                       url: `/note/${modal.attr("data-id")}`,
                       method: "patch",
                       dataType: "json",
-                      headers: { Authorization: "Bearer " + getCookie("TOKEN") },
+                      headers: {
+                        Authorization: "Bearer " + getCookie("TOKEN"),
+                      },
                       data: {
                         title: noteTitle,
                         content: noteContent,
@@ -806,7 +810,9 @@
                       url: `/note/${modal.attr("data-id")}`,
                       method: "delete",
                       dataType: "json",
-                      headers: { Authorization: "Bearer " + getCookie("TOKEN") },
+                      headers: {
+                        Authorization: "Bearer " + getCookie("TOKEN"),
+                      },
                       success: function (response) {
                         console.log(response);
                         if (!response.error) {
@@ -845,7 +851,7 @@
               } else {
                 let emptyNote = document.createElement("h3");
                 emptyNote.innerText =
-                  "You don't have any Note! Let's create Note!";
+                  "You don't have any Notes! Let's create Note!";
                 emptyNote.classList.add("text-center");
                 $(".note-list").append(emptyNote);
               }

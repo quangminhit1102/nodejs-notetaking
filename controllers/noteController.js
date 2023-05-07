@@ -20,6 +20,48 @@ exports.getAllType = (req, res, next) => {
       return res.json({ error: true, message: err, data: result });
     });
 };
+// Get All Type by Pagination
+//Page
+//=>TotalPage
+//=>TotalPage
+//=>TotalPage
+const typeEachPage = 4;
+exports.getTypePagination = async (req, res, next) => {
+  let user = req?.user;
+  let page = 1;
+  if (req.query.page != undefined) {
+    if (parseInt(req.query.page) != NaN) {
+      page = req.query.page > 0 ? req.query.page : 1;
+    } else {
+      return res.json({ error: true, message: "Page Not Valid", data: result });
+    }
+  }
+  let start = (page - 1) * typeEachPage;
+  let total = await Type.find({ user: user._id }).countDocuments();
+  var totalPage = Math.ceil(total / typeEachPage);
+
+  let types = await Type.find({ user: user._id })
+    .sort({ createdAt: -1 })
+    .skip(start)
+    .limit(typeEachPage);
+  if (types) {
+    return res.json({
+      error: false,
+      message: "Get Data Success!",
+      data: {
+        totalPage: totalPage,
+        currentPage: page,
+        data: types,
+      },
+    });
+  } else {
+    return res.json({
+      error: true,
+      message: "There was a error!",
+      data: [],
+    });
+  }
+};
 // Add Type
 exports.postAddType = (req, res, next) => {
   let user = req?.user;
@@ -243,6 +285,7 @@ exports.postAddNote = (req, res, next) => {
 exports.getAllNote = (req, res, next) => {
   let user = req?.user;
   Note.find({ user: user._id })
+    .sort({ createdAt: -1 })
     .populate("type")
     .exec()
     .then((result) => {
