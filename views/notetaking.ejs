@@ -585,17 +585,21 @@
             if (!response.error) {
               // console.log(response.data);
               $(".button-filter").append(
-                `<button class="btn btn-default" data-filter="all">All</button>`
+                `<button type="button" class="btn btn-default" data-filter="">All</button>`
               );
               let data = response.data;
               data.forEach((item) => {
-                let button = `<button class="btn btn-default border border-dark" title="${item.description}" style="background-color:${item.color};" data-filter="all">${item.title}</button>`;
+                let button = `<button type="button" class="btn btn-default border border-dark" title="${item.description}" style="background-color:${item.color};" data-filter="${item._id}">${item.title}</button>`;
                 $(".button-filter").append(button);
               });
               $("#nodeType").find("option").not(":first").remove();
               data.forEach((item) => {
                 let option = `<option value="${item._id}">${item.title}</option>`;
                 $("#nodeType").append(option);
+              });
+
+              $(".button-filter button").on("click", (e) => {
+                loadNote($(e.target).attr("data-filter"));
               });
             } else {
               alert("Error");
@@ -606,10 +610,10 @@
           },
         });
       };
-      const loadNote = async function () {
+      const loadNote = async function (type = "") {
         $(".note-list").html("");
         $.ajax({
-          url: "/note",
+          url: "/note/?type=" + type,
           method: "get",
           dataType: "json",
           headers: { Authorization: "Bearer " + getCookie("TOKEN") },

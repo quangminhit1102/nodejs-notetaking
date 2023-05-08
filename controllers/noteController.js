@@ -284,7 +284,17 @@ exports.postAddNote = (req, res, next) => {
 // Get All Note
 exports.getAllNote = (req, res, next) => {
   let user = req?.user;
-  Note.find({ user: user._id })
+  let type = "";
+  let query = {};
+  if (req.query?.type) {
+    type = req.query?.type;
+  }
+  if(type!="")
+  {
+    query.user = user;
+    query.type = type;
+  }
+  Note.find(query)
     .sort({ createdAt: -1 })
     .populate("type")
     .exec()
