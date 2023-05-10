@@ -1,0 +1,76 @@
+<script src="https://cdn.jsdelivr.net/npm/simple-notify@0.5.5/dist/simple-notify.min.js"></script>
+<script>
+  $("#joinRoomButton").on("click", function (e) {
+    let roomId = $("#roomId").val();
+    if (roomId != "" && roomId != undefined) {
+      $.ajax({
+        url: "/room-check/" + $("#roomID").val(),
+        method: "get",
+        dataType: "json",
+        // headers: { Authorization: "Bearer " + getCookie("TOKEN") },
+        success: function (response) {
+          if (!response.error) {
+            myNotify = new Notify({
+              status: "success",
+              title: "Success",
+              text: response.message,
+              effect: "slide",
+              type: 3,
+              autoclose: true,
+            });
+            setTimeout(() => {
+              window.url = response.data;
+            }, 3000);
+          } else {
+            myNotify = new Notify({
+              status: "error",
+              title: "Error",
+              text: response.message,
+              effect: "slide",
+              type: 3,
+              autoclose: true,
+            });
+          }
+        },
+        error: function (err) {},
+      });
+    }
+  });
+  $("#createRoomButton").on("click", function (e) {
+    let roomName = $("#roomName").val();
+    if (roomName != "" && roomName != undefined) {
+      $.ajax({
+        url: "/room/add-room",
+        method: "post",
+        dataType: "json",
+        data: { roomName: roomName },
+        // headers: { Authorization: "Bearer " + getCookie("TOKEN") },
+        success: function (response) {
+          if (!response.error) {
+            myNotify = new Notify({
+              status: "success",
+              title: "Success",
+              text: response.message,
+              effect: "slide",
+              type: 3,
+              autoclose: true,
+            });
+            setTimeout(() => {
+              window.location.href = decodeURI(response.redirectUrl.toString());
+            }, 3000);
+          } else {
+            myNotify = new Notify({
+              status: "error",
+              title: "Error",
+              text: response.message,
+              effect: "slide",
+              type: 3,
+              autoclose: true,
+            });
+          }
+        },
+        error: function (err) {},
+      });
+    }
+  });
+</script>

@@ -11,7 +11,6 @@ const roomSchema = new Schema(
     },
     expireDay: {
       type: String,
-      required: true,
     },
     _id: {
       type: String,
