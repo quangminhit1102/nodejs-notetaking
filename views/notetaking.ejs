@@ -43,7 +43,21 @@
             </button>
           </div>
           <br />
-          <div class="row note-list">
+          <div class="input-group mb-5 justify-content-center">
+            <input
+              type="text"
+              class="form-control-fake"
+              placeholder="Search Note"
+            />
+            <button
+              class="btn btn-outline-secondary"
+              type="button"
+              id="button-search"
+            >
+              Search
+            </button>
+          </div>
+          <div class="row note-list justify-content-center">
             <div
               class="gallery_product col-lg-4 col-md-4 col-sm-4 col-xs-6 filter hdpe"
             >
@@ -625,7 +639,7 @@
               if (data.length > 0) {
                 data.forEach((item) => {
                   console.log(item);
-                  let card = `<div class="gallery_product col-lg-4 col-md-4 col-sm-4 col-xs-6 filter hdpe" data-bs-toggle='modal' data-bs-target='#editNoteModal-${item._id}' data-type="${item?.type?._id}" >
+                  let card = `<div class="gallery_product filter hdpe" data-bs-toggle='modal' data-bs-target='#editNoteModal-${item._id}' data-type="${item?.type?._id}" >
               <div class="note-body p-4">
                 <div class="note-title">
                   ${item.title}

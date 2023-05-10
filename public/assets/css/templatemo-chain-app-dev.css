@@ -2327,6 +2327,7 @@ responsive
 .gallery_product {
   font-family: "Roboto", sans-serif;
   margin-bottom: 30px;
+  margin-right: 20px;
   background-color: #fff;
   border-radius: 13px;
   border: 1px solid #000;
@@ -2336,10 +2337,10 @@ responsive
 .gallery_product:hover {
   transition: 0.3s ease;
   cursor: pointer;
-  transform: translate(-10px, -20px);
+  transform: translate(-5px, -10px);
 }
 .gallery_product .note-body {
-  width: 350px;
+  width: 400px;
   height: 350px;
 }
 .gallery_product .note-title {
@@ -2360,21 +2361,60 @@ responsive
 }
 .gallery_product .note-ribbon {
   position: absolute;
-  z-index: -1;
-  top: 12px;
-  left: 0px;
-  width: 410px;
-  height: 50px;
+  top: 10px;
+  left: 4px;
+  width: 2px;
+  height: 65px;
   padding: 0 0.5em;
-  font-size: 2em;
   margin: 0 0 0 -0.4em;
   line-height: 1.875em;
   color: #e6e2c8;
-  border-radius: 15px;
   background: rgb(123, 159, 199);
   box-shadow: -1px 2px 3px rgba(0, 0, 0, 0.5);
+  border-radius: 13px;
 }
 .button-filter button {
   margin-right: 5px;
   margin-top: 10px;
+}
+
+@media (max-width: 1200px) {
+  .gallery_product {
+    width: 100%;
+  }
+}
+
+@media (max-width: 992px) {
+  .gallery_product {
+    width: 100%;
+  }
+}
+
+@media (max-width: 767px) {
+  .gallery_product {
+    width: 50%;
+  }
+}
+
+@media (min-width: 767px) {
+  .gallery_product {
+    width: 30%;
+  }
+}
+.form-control-fake {
+  display: block;
+  width: 300px;
+  padding: 0.375rem 0.75rem;
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.5;
+  color: #212529;
+  background-color: #fff;
+  background-clip: padding-box;
+  border: 1px solid #ced4da;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  border-radius: 0.25rem;
+  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
 }
