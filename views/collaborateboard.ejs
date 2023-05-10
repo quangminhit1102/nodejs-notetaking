@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+      integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <link rel="stylesheet" href="/assets/css/board.css" />
+    <title>Collaborate Board</title>
+  </head>
+  <body>
+    <div class="container">
+      <div class="tools">
+        <input type="color" id="color" />
+        <button id="eraser">
+          <i class="fas fa-eraser"></i>
+        </button>
+        <button id="decrease">
+          <i class="fas fa-angle-double-down"></i>
+        </button>
+        <input type="number" hidden id="size" value="5" />
+        <button id="increase">
+          <i class="fas fa-angle-double-up"></i>
+        </button>
+        <a download="download.png" id="save" class="">
+          <i class="fas fa-download"></i>
+        </a>
+        <button id="clear">
+          <span>x</span>
+        </button>
+      </div>
+      <canvas id="canvas" width="1600" height="750"></canvas>
+    </div>
+    <script src="/assets/js/board.js"></script>
+  </body>
+</html>

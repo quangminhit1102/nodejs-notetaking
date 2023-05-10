@@ -257,6 +257,22 @@
     <script src="assets/js/imagesloaded.js"></script>
     <script src="assets/js/popup.js"></script>
     <script src="assets/js/custom.js"></script>
+    <script>
+      $("#joinRoomButton").on("click", function(e){
+        let roomId = $("#roomId").val()
+        console.log(roomId);
+        if(roomId != "" && roomId != undefined)
+        {
+          $.ajax({
+          url: "/white-board/room/" + $("#roomID").val(),
+          method: "get",
+          dataType: "json",
+          // headers: { Authorization: "Bearer " + getCookie("TOKEN") },
+          success: function (response) {},
+          error: function(err){}
+           })
+        }
+      })
+    </script>
   </body>
 </html>
-

@@ -1,0 +1,57 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+body {
+  text-align: center;
+}
+.tools {
+  background: linear-gradient(
+    to left,
+    #3ba1bb,
+    #6dd5fa,
+    #2980b9
+  ); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+
+  display: flex;
+  align-items: center;
+  padding-left: 15px;
+  padding-right: 15px;
+}
+.tools > * {
+  background-color: #fff;
+  width: 40px;
+  height: 40px;
+  margin: 10px;
+  border: none;
+  outline: none;
+  border-radius: 3px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  font-size: 20px;
+  font-weight: 600;
+}
+.tools input {
+  text-align: center;
+}
+.tools #save {
+  margin-left: auto;
+}
+.tools > *:hover {
+  background: #6dd5fa;
+}
+#canvas {
+  border: 1px solid #000;
+}
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+i {
+  color: #000 !important;
+}
