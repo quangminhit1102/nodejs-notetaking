@@ -14,5 +14,6 @@
 |bcryptjs|Encryption Package|
 |shortid|Auto-generate Id|
 |body-parser|Body resquest parser|
+|Socket IO | RealTime Package :)|
 
 ## Author NguyenQuangMinh |NGUISM|
