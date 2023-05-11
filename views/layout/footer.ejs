@@ -1,10 +1,11 @@
 <script src="https://cdn.jsdelivr.net/npm/simple-notify@0.5.5/dist/simple-notify.min.js"></script>
 <script>
   $("#joinRoomButton").on("click", function (e) {
+    e.preventDefault();
     let roomId = $("#roomId").val();
     if (roomId != "" && roomId != undefined) {
       $.ajax({
-        url: "/room-check/" + $("#roomID").val(),
+        url: "/room-check/" + $("#roomId").val(),
         method: "get",
         dataType: "json",
         // headers: { Authorization: "Bearer " + getCookie("TOKEN") },
@@ -18,8 +19,20 @@
               type: 3,
               autoclose: true,
             });
+            $("#joinRoomButton").html('<div class="spinner-border spinner-border-sm text-info" role="status"></div>');
+            $("#joinRoomButton").prop( "disabled", true );
+            $("body").css("cursor", "not-allowed");
+            $("#createRoomButton").html('<div class="spinner-border spinner-border-sm text-info" role="status"></div>');
+            $("#createRoomButton").prop( "disabled", true );
+            $("body").css("cursor", "not-allowed");
             setTimeout(() => {
-              window.url = response.data;
+              window.location.href = decodeURI(response.data.toString());
+              $("#joinRoomButton").html("Join Room")
+              $("#joinRoomButton").prop( "disabled", false );
+              $("body").css("cursor", "default");
+              $("#createRoomButton").html("Create Room")
+              $("#createRoomButton").prop( "disabled", false );
+              $("body").css("cursor", "default");
             }, 3000);
           } else {
             myNotify = new Notify({
@@ -37,6 +50,7 @@
     }
   });
   $("#createRoomButton").on("click", function (e) {
+    e.preventDefault();
     let roomName = $("#roomName").val();
     if (roomName != "" && roomName != undefined) {
       $.ajax({
@@ -55,8 +69,20 @@
               type: 3,
               autoclose: true,
             });
+            $("#joinRoomButton").html('<div class="spinner-border spinner-border-sm text-info" role="status"></div>');
+            $("#joinRoomButton").prop( "disabled", true );
+            $("body").css("cursor", "not-allowed");
+            $("#createRoomButton").html('<div class="spinner-border spinner-border-sm text-info" role="status"></div>');
+            $("#createRoomButton").prop( "disabled", true );
+            $("body").css("cursor", "not-allowed");
             setTimeout(() => {
               window.location.href = decodeURI(response.redirectUrl.toString());
+              $("#joinRoomButton").html("Join Room")
+              $("#joinRoomButton").prop( "disabled", false );
+              $("body").css("cursor", "default");
+              $("#createRoomButton").html("Create Room")
+              $("#createRoomButton").prop( "disabled", false );
+              $("body").css("cursor", "default");
             }, 3000);
           } else {
             myNotify = new Notify({

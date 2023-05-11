@@ -25,6 +25,7 @@
     "nodemailer-sendgrid-transport": "^0.2.0",
     "nodemon": "^2.0.22",
     "shortid": "^2.2.16",
+    "socket.io": "^4.6.1",
     "tailwindcss": "^3.3.1"
   }
 }

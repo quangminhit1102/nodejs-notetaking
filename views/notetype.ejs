@@ -7,7 +7,8 @@
         <input
           type="text"
           class="form-control-fake"
-          placeholder="Search Note"
+          placeholder="Search Type"
+          id="searchString"
         />
         <button
           class="btn btn-outline-secondary"
@@ -348,10 +349,10 @@
           item.nextElementSibling.style.color = `rgb(${ir},${ig},${ib})`;
         });
       };
-      const loadType = async function (page = 1) {
+      const loadType = async function (page = 1, search = "") {
         $(".button-filter").html("");
         $.ajax({
-          url: "/type-pagination/?page=" + page,
+          url: `/type-pagination/?page=${page}&search=${search}`,
           method: "get",
           dataType: "json",
           headers: { Authorization: "Bearer " + getCookie("TOKEN") },
@@ -377,11 +378,15 @@
                   );
                 }
                 let row = `<tr>
-                    <th scope="row">${index}</th>
+                    <th scope="row">${index + 1}</th>
                     <td>${item.title}</td>
                     <td>${item.description}</td>
                     <td>${item.createdAt}</td>
-                    <td class="d-flex flex-row align-items-center">${item.color}<div style="width:20px;height:20px;margin-left:5px;background-color:${item.color};"></div></td>
+                    <td class="d-flex flex-row align-items-center">${
+                      item.color
+                    }<div style="width:20px;height:20px;margin-left:5px;background-color:${
+                  item.color
+                };"></div></td>
                     <td>
                       <div class="task-note">
                         <i
@@ -391,7 +396,9 @@
                           data-bs-toggle="modal"
                           data-bs-target="#editTypeModal-${item._id}"
                         ></i>
-                        <i class="fas fa-trash fa-fw delete-type-button" title="Delete Type" data-id="${item._id}"></i>
+                        <i class="fas fa-trash fa-fw delete-type-button" title="Delete Type" data-id="${
+                          item._id
+                        }"></i>
                       </div>
                     </td>
                   </tr>
@@ -499,17 +506,23 @@
                   );
                   switch (temp) {
                     case "-1":
-                      loadType(parseInt(data.currentPage) - 1);
+                      loadType(
+                        parseInt(data.currentPage) - 1,
+                        $("#searchString").val()
+                      );
                       break;
                     case "+1":
                       if (data.currentPage < data.totalPage) {
-                        loadType(parseInt(data.currentPage) + 1);
+                        loadType(
+                          parseInt(data.currentPage) + 1,
+                          $("#searchString").val()
+                        );
                       } else {
-                        loadType(data.totalPage);
+                        loadType(data.totalPage, $("#searchString").val());
                       }
                       break;
                     default:
-                      loadType(temp);
+                      loadType(temp, $("#searchString").val());
                       break;
                   }
                 });
@@ -627,6 +640,10 @@
               },
             });
           }
+        });
+        $("#button-search").click((e) => {
+          let search = $("#searchString").val();
+          loadType("", search);
         });
       });
     </script>

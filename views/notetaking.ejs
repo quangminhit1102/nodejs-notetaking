@@ -48,6 +48,7 @@
               type="text"
               class="form-control-fake"
               placeholder="Search Note"
+              id="searchString"
             />
             <button
               class="btn btn-outline-secondary"
@@ -624,10 +625,10 @@
           },
         });
       };
-      const loadNote = async function (type = "") {
+      const loadNote = async function (type = "", search = "") {
         $(".note-list").html("");
         $.ajax({
-          url: "/note/?type=" + type,
+          url: `/note/?type=${type}&search=${search}`,
           method: "get",
           dataType: "json",
           headers: { Authorization: "Bearer " + getCookie("TOKEN") },
@@ -706,7 +707,7 @@
             </form>
           </div>
           <div class="modal-footer justify-content-between">
-            <button type="button" class="btn btn-outline-danger align-left deleteNoteBtn">
+            <button type="button" class="btn btn-danger align-left deleteNoteBtn" style="background-color:red">
               Delete Note
             </button>
             <div class="footer-end">
@@ -868,8 +869,7 @@
                 });
               } else {
                 let emptyNote = document.createElement("h3");
-                emptyNote.innerText =
-                  "You don't have any Notes! Let's create Note!";
+                emptyNote.innerText = "No Note found!";
                 emptyNote.classList.add("text-center");
                 $(".note-list").append(emptyNote);
               }
@@ -975,6 +975,10 @@
               alert("server error");
             },
           });
+        });
+        $("#button-search").click((e) => {
+          let search = $("#searchString").val();
+          loadNote("", search);
         });
       });
     </script>

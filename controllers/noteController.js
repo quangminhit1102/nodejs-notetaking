@@ -29,6 +29,8 @@ const typeEachPage = 4;
 exports.getTypePagination = async (req, res, next) => {
   let user = req?.user;
   let page = 1;
+  let searchString = "";
+  searchString = (req?.query?.search === undefined) ? "":req?.query?.search;
   if (req.query.page != undefined) {
     if (parseInt(req.query.page) != NaN) {
       page = req.query.page > 0 ? req.query.page : 1;
@@ -37,10 +39,10 @@ exports.getTypePagination = async (req, res, next) => {
     }
   }
   let start = (page - 1) * typeEachPage;
-  let total = await Type.find({ user: user._id }).countDocuments();
+  let total = await Type.find({ user: user._id,$or:[{title:{$regex:`${searchString}`}},{description:{$regex:`${searchString}`}}]}).countDocuments();
   var totalPage = Math.ceil(total / typeEachPage);
 
-  let types = await Type.find({ user: user._id })
+  let types = await Type.find({ user: user._id,$or:[{title:{$regex:`${searchString}`}},{description:{$regex:`${searchString}`}}]} )
     .sort({ createdAt: -1 })
     .skip(start)
     .limit(typeEachPage);
@@ -284,6 +286,8 @@ exports.postAddNote = (req, res, next) => {
 // Get All Note
 exports.getAllNote = (req, res, next) => {
   let user = req?.user;
+  let searchString = "";
+  searchString = (req?.query?.search === undefined) ? "":req?.query?.search;
   let type = "";
   let query = {};
   if (req.query?.type) {
@@ -295,10 +299,16 @@ exports.getAllNote = (req, res, next) => {
     query.type = type;
   }
   Note.find(query)
-    .sort({ createdAt: -1 })
+    .sort({ createdAt: -1})
     .populate("type")
     .exec()
     .then((result) => {
+      result = result.filter(item =>{
+        if(item.title.toLowerCase().includes(searchString) || item.content.toLowerCase().includes(searchString))
+        {
+          return item;
+        }
+      })
       return res.json({
         error: false,
         message: "Get data success",

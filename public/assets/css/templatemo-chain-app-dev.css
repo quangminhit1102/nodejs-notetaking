@@ -2349,7 +2349,7 @@ responsive
   margin-bottom: 20px;
 }
 .gallery_product .note-content {
-  max-width: 350px;
+  max-width: 300px;
   text-overflow: ellipsis;
   overflow: hidden;
   display: -webkit-box !important;
@@ -2417,4 +2417,8 @@ responsive
   appearance: none;
   border-radius: 0.25rem;
   transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+.waiting
+{
+  cursor:wait !important;
 }

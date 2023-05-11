@@ -11,26 +11,26 @@ exports.getTakeNote = (req, res, next) => {
 };
 exports.getHome = (req, res, next) => {
   if (req?.session?.user) {
-    res.render("../views/index.ejs", { user: req.session.user });
+    return res.render("../views/index.ejs", { user: req.session.user });
   } else {
-    res.redirect("/login");
+    return res.redirect("/login");
   }
 };
 exports.getRoom = (req, res, next) => {
   let roomId = req.params.id;
   if (roomId != undefined && roomId != "") {
     Room.findOne({ _id: roomId }).then((result) => {
-      if (result) {
-        return (
-          res.render("collaborateboard.ejs"),
-          {
-            roomId: roomId,
-          }
-        );
+      if (result != null) {
+        return res.render("../views/collaborateboard.ejs", {
+          roomId: roomId,
+          userId: req?.session?.user._id,
+          roomName: result.roomname
+        });
       }
     });
+  } else {
+    return res.redirect("/");
   }
-  return res.redirect("/");
 };
 exports.postAddRoom = (req, res, next) => {
   let { roomName } = req.body;
@@ -65,18 +65,25 @@ exports.getRoomCheck = (req, res, next) => {
   let roomId = req.params.id;
   if (roomId != undefined && roomId != "") {
     Room.findOne({ _id: roomId }).then((result) => {
-      if (result) {
+      if (result != null) {
         return res.json({
           error: false,
           message: "Connecting To Room...",
           data: "/room/" + roomId,
         });
+      } else {
+        return res.json({
+          error: true,
+          message: "Room not found!",
+          data: [],
+        });
       }
     });
+  } else {
+    return res.json({
+      error: true,
+      message: "Room not found!",
+      data: [],
+    });
   }
-  return res.json({
-    error: true,
-    message: "Room not found!",
-    data: [],
-  });
 };

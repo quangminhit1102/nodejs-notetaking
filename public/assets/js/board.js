@@ -1,3 +1,5 @@
+var socket = io();
+socket.emit("join-room", ROOM_ID, USER_ID);
 var color = document.querySelector("#color");
 var eraser = document.querySelector("#eraser");
 var dec = document.querySelector("#decrease");
@@ -10,7 +12,7 @@ var canvas = document.querySelector("#canvas");
 //context
 var ctx = canvas.getContext("2d");
 var paintColor = "#000";
-var paintSize = 5;
+var paintSize = 2;
 size.value = paintSize;
 var currentPos = {
   x: 0,
@@ -59,6 +61,8 @@ canvas.addEventListener("mousemove", (e) => {
 });
 canvas.addEventListener("mouseup", () => {
   isDrawing = false;
+  let dataURL = canvas.toDataURL();
+  socket.emit("send-object", dataURL);
 });
 
 color.addEventListener("change", (e) => {
@@ -78,6 +82,7 @@ size.addEventListener("change", (e) => {
 });
 clear.addEventListener("click", () => {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
+  socket.emit("send-object", "");
 });
 
 save.addEventListener("click", () => {
@@ -87,3 +92,31 @@ save.addEventListener("click", () => {
 eraser.addEventListener("click", (e) => {
   paintColor = "#fff";
 });
+
+let instance = panzoom(canvas, {
+  maxZoom: 2.6,
+  minZoom: 1,
+  zoomSpeed: 0.08,
+  beforeMouseDown: function (e) {
+    let shouldIgnore = !e.button;
+    return shouldIgnore;
+  },
+});
+
+// instance.on('transform', function () {
+//   document.getElementsByClassName("container").style.backgroundPositionX = `${transformX}px`
+//   document.getElementsByClassName("container").style.backgroundPositionY = `${transformY}px`
+//   document.getElementsByClassName("container").style.backgroundSize = `${55 * transformScale}px`
+// })
+
+socket.on("get-object", function (msg) {
+  var ctx = canvas.getContext("2d");
+  var img = new Image();
+  img.onload = function () {
+    ctx.drawImage(img, 0, 0); // Or at whatever offset you like
+  };
+  if (msg != "") {
+    img.src = msg;
+  }
+});
+console.log(ROOM_ID, "BoardJS");
